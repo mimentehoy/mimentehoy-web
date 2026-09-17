@@ -35,12 +35,25 @@ export function NewsletterBox() {
     };
 
     try {
-      // Netlify Forms: POST to the site root with form data
+      // Netlify Forms: POST to the site root with form data (keeps Netlify Forms detection)
       const res = await fetch("/", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: encode(payload),
       });
+
+      // Additionally, forward to our Netlify Function which will push to MailerLite.
+      // This guarantees MailerLite receives the subscriber even if Netlify Forms webhooks are not configured.
+      try {
+        await fetch("/.netlify/functions/mailerLiteSubscribe", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, name, interests, consent }),
+        });
+      } catch (err) {
+        // non-blocking: log in console, do not fail the whole flow
+        console.warn('MailerLite function error', err);
+      }
 
       if (res.ok) {
         setStatus("success");

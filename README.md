@@ -98,3 +98,42 @@ Se requiere confirmar:
 - si hay dominio y acceso administrativo
 
 Con esa información, se podrá cerrar la arquitectura final y avanzar a la siguiente fase del proyecto.
+
+---
+
+## Deploy en Netlify y configuración de MailerLite (rápido)
+
+Pasos que se han automatizado en el repositorio y cómo usarlo:
+
+1) Conectar el repositorio GitHub a Netlify y crear un sitio usando la carpeta `apps/web` como "Base directory" (si Netlify te pide un subdirectorio). Opciones de build:
+   - Build command: `npm run build`
+   - Publish directory: `out`
+   - Node version: 20 (ya configurado en `netlify.toml`)
+
+2) El repositorio incluye una Netlify Function preparada para reenviar suscriptores a MailerLite. Antes de ejecutar el primer deploy, añade en Netlify (Site → Settings → Build & deploy → Environment)
+   la variable de entorno:
+   - `MAILERLITE_API_KEY` = tu_clave_de_mailerlite
+
+   Nota: la clave no debe almacenarse en el repositorio. También puedes usar `MAILERLITE_TOKEN` si tu clave usa ese nombre.
+
+3) En el build se ejecuta un paso previo (`prebuild`) que copia la función desde `src/mailerLiteSubscribeFunction.js` a `netlify/functions/mailerLiteSubscribe.js`. Netlify construirá y desplegará la función automáticamente.
+
+4) El formulario de newsletter en la web realiza dos acciones al enviar:
+   - POST a `/` (mantiene la compatibilidad con Netlify Forms si quieres activarlo)
+   - POST a `/.netlify/functions/mailerLiteSubscribe` para que MailerLite reciba el suscriptor inmediatamente.
+
+5) Para probar:
+   - Despliega a Netlify.
+   - Envía una suscripción de prueba desde la página (usa una dirección de email de prueba).
+   - Comprueba en Netlify (Site → Functions) que `mailerLiteSubscribe` existe y en Netlify Logs que se ejecutó.
+   - Comprueba en MailerLite si aparece el nuevo suscriptor.
+
+6) Alternativa/backup: si no quieres usar MailerLite todavía, deja `MAILERLITE_API_KEY` vacío: el formulario seguirá funcionando como Netlify Form (si activas Forms en Netlify) y el comportamiento no se romperá.
+
+---
+
+Si quieres, continuo y:
+- Conecto el repo a Netlify por ti (necesitarás autorizar la conexión OAuth en Netlify/GitHub), o
+- Te doy los pasos exactos con capturas para que lo conectes tú y lo probemos.
+
+Dime cuál prefieres.
