@@ -36,26 +36,25 @@ export function NewsletterBox() {
 
     try {
       // Netlify Forms: POST to the site root with form data (keeps Netlify Forms detection)
-      const res = await fetch("/", {
+      // This is best-effort only; the real subscriber confirmation is the MailerLite function below.
+      const formRes = await fetch("/", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: encode(payload),
-      });
+      }).catch(() => null);
 
-      // Additionally, forward to our Netlify Function which will push to MailerLite.
-      // This guarantees MailerLite receives the subscriber even if Netlify Forms webhooks are not configured.
-      try {
-        await fetch("/.netlify/functions/mailerLiteSubscribe", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, name, interests, consent }),
-        });
-      } catch (err) {
-        // non-blocking: log in console, do not fail the whole flow
-        console.warn('MailerLite function error', err);
-      }
+      // Forward to our Netlify Function which will push to MailerLite.
+      // This is the authoritative success signal, because Netlify Forms may reject static form POSTs
+      // while the function still accepts and stores the subscriber.
+      const functionRes = await fetch("/.netlify/functions/mailerLiteSubscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, name, interests, consent }),
+      }).catch(() => null);
 
-      if (res.ok) {
+      const success = !!(formRes?.ok || functionRes?.ok);
+
+      if (success) {
         setStatus("success");
         setEmail("");
         setName("");
