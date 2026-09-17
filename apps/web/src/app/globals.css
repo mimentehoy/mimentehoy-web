@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f7f1eb;
+  --foreground: #201913;
+  --surface: #fffdfb;
+  --muted: #efe3d7;
+  --accent: #c46f48;
+  --accent-strong: #8f4b32;
+  --sage: #7b9b7a;
+  --ink: #2b241f;
+  --card: rgba(255, 255, 255, 0.78);
+  --shadow-color: rgba(32, 25, 19, 0.09);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-sage: var(--sage);
+  --color-ink: var(--ink);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background:
+    radial-gradient(circle at top, rgba(196, 111, 72, 0.12), transparent 35%),
+    var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+p {
+  margin: 0;
+}
+
+.container-shell {
+  @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+}
+
+.section-shell {
+  @apply rounded-[26px] border border-stone-200/80 bg-white/80 shadow-[0_18px_48px_rgba(32,25,19,0.06)] backdrop-blur-sm;
+}
+
+.soft-label {
+  @apply inline-flex items-center rounded-full border border-stone-200 bg-stone-100 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-stone-600;
+}
+
+.primary-button {
+  @apply inline-flex items-center justify-center rounded-full bg-[#201913] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#483a31];
+}
+
+.secondary-button {
+  @apply inline-flex items-center justify-center rounded-full border border-stone-300 bg-white/80 px-5 py-3 text-sm font-semibold text-stone-800 transition hover:border-stone-400 hover:bg-white;
+}
+
+.link-pill {
+  @apply inline-flex items-center rounded-full border border-stone-200 bg-stone-50 px-3 py-1.5 text-sm font-medium text-stone-700 transition hover:border-stone-300 hover:bg-stone-100;
+}
