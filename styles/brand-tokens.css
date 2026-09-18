@@ -1,0 +1,28 @@
+:root {
+  /* Brand */
+  --brand-900: #001733; /* principal - trazo/texto oscuro (muestreo exacto) */
+  --brand-600: #009bb0; /* acento turquesa */
+
+  /* Gradient stops (extraídos de la portada/logotipo) */
+  --grad-1: #009bb0; /* teal */
+  --grad-2: #17aba3; /* teal-green */
+  --grad-3: #f6a114; /* amarillo/mostaza */
+  --grad-4: #fd9b10; /* naranja */
+  --grad-5: #ed4a6f; /* rosa */
+
+  /* Neutrals */
+  --bg: #ffffff;
+  --bg-alt: #f7fafb;
+  --text-900: #001733;
+  --text-700: #334155;
+  --muted: #94a3b8;
+
+  /* Utilities */
+  --focus: var(--brand-600);
+  --border: #e6eef0;
+}
+
+/* Example gradient utility */
+.mimentehoy-gradient {
+  background: linear-gradient(90deg, var(--grad-1) 0%, var(--grad-2) 25%, var(--grad-3) 50%, var(--grad-4) 75%, var(--grad-5) 100%);
+}
