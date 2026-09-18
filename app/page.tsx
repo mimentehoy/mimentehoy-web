@@ -1,19 +1,11 @@
 import React from 'react'
+import Hero from '../components/Hero'
 
 export default function HomePage() {
   return (
     <div className="p-4">
       {/* HERO */}
-      <section className="hero rounded-2xl overflow-hidden mb-6">
-        <div className="p-6">
-          <h1 className="text-2xl font-bold text-[var(--text-900)]">Entenderles cambia la forma de ayudarles</h1>
-          <p className="mt-2 text-sm text-[var(--text-700)]">Recursos prácticos y fiables sobre TDAH, autismo, crianza y salud mental.</p>
-          <div className="mt-4 flex gap-3">
-            <button className="px-4 py-2 rounded-lg bg-[var(--brand-600)] text-white">Suscribirme</button>
-            <button className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#009bb0] via-[#17aba3] to-[#fd9b10] text-white">Explorar</button>
-          </div>
-        </div>
-      </section>
+      <Hero />
 
       {/* LO NUEVO ESTA SEMANA */}
       <section className="mb-6">
