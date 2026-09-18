@@ -3,6 +3,7 @@ node_modules
 out
 .env
 .env.local
+.env.*
 .env.*.local
 *.log
 .DS_Store
@@ -11,3 +12,7 @@ coverage
 .prisma
 /dist
 /build
+data/*.json
+apps/web/.env
+apps/web/.env.local
+apps/web/.env.*

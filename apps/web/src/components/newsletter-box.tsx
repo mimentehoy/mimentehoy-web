@@ -26,35 +26,21 @@ export function NewsletterBox() {
     }
     setStatus("loading");
 
-    const payload = {
-      "form-name": "newsletter",
-      name,
-      email,
-      interests: interests.join(","),
-      consent: consent ? "yes" : "no",
-    };
-
     try {
-      // Netlify Forms: POST to the site root with form data (keeps Netlify Forms detection)
-      // This is best-effort only; the real subscriber confirmation is the MailerLite function below.
-      const formRes = await fetch("/", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: encode(payload),
-      }).catch(() => null);
-
-      // Forward to our Netlify Function which will push to MailerLite.
-      // This is the authoritative success signal, because Netlify Forms may reject static form POSTs
-      // while the function still accepts and stores the subscriber.
-      const functionRes = await fetch("/.netlify/functions/mailerLiteSubscribe", {
+      const res = await fetch("/api/newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, name, interests, consent }),
-      }).catch(() => null);
+        body: JSON.stringify({
+          email,
+          name,
+          interests,
+          consent,
+        }),
+      });
 
-      const success = !!(formRes?.ok || functionRes?.ok);
+      const data = await res.json().catch(() => ({}));
 
-      if (success) {
+      if (res.ok) {
         setStatus("success");
         setEmail("");
         setName("");
@@ -62,9 +48,11 @@ export function NewsletterBox() {
         setConsent(false);
       } else {
         setStatus("error");
+        console.error("Newsletter submission failed:", data);
       }
     } catch (err) {
       setStatus("error");
+      console.error("Newsletter error:", err);
     }
   };
 
