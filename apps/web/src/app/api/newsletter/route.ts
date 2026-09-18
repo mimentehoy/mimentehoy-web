@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
 const resolveDataFile = () => {
   const root = process.cwd();
   const dataDir = path.join(root, "data");

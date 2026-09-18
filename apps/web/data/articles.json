@@ -1,0 +1,32 @@
+[
+  {
+    "id": "estructura-ayuda-mas-que-perfeccion",
+    "title": "La estructura ayuda más que la perfección",
+    "slug": "estructura-ayuda-mas-que-perfeccion",
+    "description": "Cuándo la previsibilidad reduce la ansiedad y aumenta la autonomía.",
+    "category": "TDAH",
+    "author": "MIMENTEHOY",
+    "date": "2026-09-18",
+    "status": "publicado",
+    "featured": true,
+    "tags": ["TDAH", "rutinas", "autonomía"],
+    "seoTitle": "La estructura ayuda más que la perfección | MIMENTEHOY",
+    "metaDescription": "Descubre cómo la estructura reduce ansiedad y ayuda a crear más autonomía en familias con TDAH.",
+    "content": "## La estructura ayuda más que la perfección\n\nCuando la vida familiar se vuelve caótica, muchas veces no se trata de falta de esfuerzo sino de falta de estructura. La previsibilidad reduce la ansiedad y aumenta la autonomía."
+  },
+  {
+    "id": "emociones-sin-dramatizar",
+    "title": "Cómo hablar de emociones sin dramatizar",
+    "slug": "emociones-sin-dramatizar",
+    "description": "Un marco claro para acompañar a los niños sin convertir cada emoción en un conflicto.",
+    "category": "Emociones",
+    "author": "MIMENTEHOY",
+    "date": "2026-09-17",
+    "status": "publicado",
+    "featured": true,
+    "tags": ["emociones", "crianza", "regulación"],
+    "seoTitle": "Cómo hablar de emociones sin dramatizar | MIMENTEHOY",
+    "metaDescription": "Aprende a acompañar emociones de forma calmada y útil sin convertir cada episodio en conflicto.",
+    "content": "## Hablar de emociones sin dramatizar\n\nAcompañar las emociones exige presencia, no perfección. Un lenguaje simple ayuda a regular sin convertir cada emoción en un problema grande."
+  }
+]
