@@ -1,0 +1,21 @@
+@import './brand-tokens.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Basic global styles for the initial scaffold */
+:root { box-sizing: border-box; }
+*, *:before, *:after { box-sizing: inherit; }
+
+body { font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; }
+
+/* Hero styles */
+.hero {
+  background: linear-gradient(90deg, var(--grad-1) 0%, var(--grad-2) 25%, var(--grad-3) 50%, var(--grad-4) 75%, var(--grad-5) 100%);
+  color: white;
+}
+
+/* Mobile-first container sizing */
+@media (min-width: 640px) {
+  .max-w-xl { max-width: 640px; }
+}
