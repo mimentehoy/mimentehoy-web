@@ -25,3 +25,6 @@ apps/web/netlify/functions/
 
 # Local Playwright MCP browser session artifacts (screenshots, snapshots)
 .playwright-mcp/
+
+# Local Netlify folder
+.netlify
