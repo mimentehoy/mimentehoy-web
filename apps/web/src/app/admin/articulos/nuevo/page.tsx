@@ -9,7 +9,7 @@ const initialForm = {
   description: "",
   category: "TDAH",
   author: "MIMENTEHOY",
-  status: "borrador",
+  status: "DRAFT",
   featured: false,
   tags: "",
   seoTitle: "",
@@ -107,8 +107,8 @@ export default function NewArticlePage() {
             <label className="flex flex-col gap-2 text-sm font-medium text-stone-700">
               Estado
               <select value={form.status} onChange={(e) => handleChange("status", e.target.value)} className="rounded-xl border border-stone-300 bg-white px-3 py-2">
-                <option value="borrador">Borrador</option>
-                <option value="publicado">Publicado</option>
+                <option value="DRAFT">Borrador</option>
+                <option value="PUBLISHED">Publicado</option>
               </select>
             </label>
 

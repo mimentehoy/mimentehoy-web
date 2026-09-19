@@ -78,6 +78,7 @@ model Article {
   publishedAt    DateTime?
   status         ArticleStatus @default(DRAFT)
   featured       Boolean   @default(false)
+  tags           String[]  @default([])
   seoTitle       String?
   metaDescription String?
   content        String

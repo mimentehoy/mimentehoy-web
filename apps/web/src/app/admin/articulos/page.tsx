@@ -1,29 +1,9 @@
-import fs from "fs";
-import path from "path";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { AdminAccessGate } from "@/components/auth-shell";
+import { AdminArticlesList } from "@/components/admin-articles-list";
 import { SESSION_COOKIE, verifySessionToken } from "@/lib/session";
-
-const readArticles = () => {
-  const file = path.join(process.cwd(), "data", "articles.json");
-  if (!fs.existsSync(file)) return [];
-  try {
-    return JSON.parse(fs.readFileSync(file, "utf8"));
-  } catch {
-    return [];
-  }
-};
-
-type ArticleSummary = {
-  id?: string;
-  title: string;
-  description: string;
-  category: string;
-  status: string;
-  date: string;
-  tags?: string[];
-};
+import { getArticles } from "@/lib/content";
 
 export default async function AdminArticulosPage() {
   // Drafts aren't public yet — don't read them into the server payload
@@ -31,7 +11,7 @@ export default async function AdminArticulosPage() {
   // for why this matters even though AdminAccessGate also gates rendering).
   const cookieStore = await cookies();
   const session = verifySessionToken(cookieStore.get(SESSION_COOKIE)?.value);
-  const articles = session?.role === "ADMIN" ? (readArticles() as ArticleSummary[]) : [];
+  const articles = session?.role === "ADMIN" ? await getArticles({ includeDrafts: true }) : [];
 
   return (
     <AdminAccessGate>
@@ -47,31 +27,8 @@ export default async function AdminArticulosPage() {
           </div>
         </div>
 
-        <div className="mt-8 space-y-4">
-          {articles.length === 0 ? (
-            <div className="section-shell p-6 text-stone-600">Todavía no hay artículos. Crea el primero.</div>
-          ) : (
-            articles.map((article) => (
-              <article key={article.id ?? article.title} className="section-shell p-5">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span className="soft-label">{article.category}</span>
-                      <span className="text-xs uppercase tracking-[0.14em] text-stone-500">{article.status}</span>
-                    </div>
-                    <h2 className="mt-3 text-xl font-semibold text-stone-900">{article.title}</h2>
-                    <p className="mt-2 text-sm text-stone-600">{article.description}</p>
-                  </div>
-                  <div className="text-sm text-stone-500">{article.date}</div>
-                </div>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {article.tags?.map((tag: string) => (
-                    <span key={tag} className="rounded-full border border-stone-200 bg-stone-50 px-2.5 py-1 text-xs text-stone-600">{tag}</span>
-                  ))}
-                </div>
-              </article>
-            ))
-          )}
+        <div className="mt-8">
+          <AdminArticlesList articles={articles} />
         </div>
       </main>
     </AdminAccessGate>

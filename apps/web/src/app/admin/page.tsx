@@ -22,19 +22,29 @@ export default async function AdminPage() {
   const session = verifySessionToken(cookieStore.get(SESSION_COOKIE)?.value);
   const isAdmin = session?.role === "ADMIN";
 
+  let articleCount = "—";
+  let resourceCount = "—";
   let userCount = "—";
+
   if (isAdmin && process.env.DATABASE_URL) {
     try {
-      userCount = String(await prisma.user.count());
+      const [articles, resources, users] = await Promise.all([
+        prisma.article.count(),
+        prisma.resource.count(),
+        prisma.user.count(),
+      ]);
+      articleCount = String(articles);
+      resourceCount = String(resources);
+      userCount = String(users);
     } catch {
-      userCount = "—";
+      // leave dashes — db-status page has the details
     }
   }
 
   const stats = isAdmin
     ? [
-        { label: "Artículos", value: String(readJsonCount("articles.json")) },
-        { label: "Recursos", value: String(readJsonCount("resources.json")) },
+        { label: "Artículos", value: articleCount },
+        { label: "Recursos", value: resourceCount },
         { label: "Newsletter", value: String(readJsonCount("newsletter-subscribers.json")) },
         { label: "Usuarios", value: userCount },
       ]

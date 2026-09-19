@@ -10,7 +10,7 @@ const initialForm = {
   type: "PDF",
   label: "Gratis",
   description: "",
-  status: "publicado",
+  status: "published",
   downloadUrl: "/downloads/default.pdf",
   featured: true,
 };

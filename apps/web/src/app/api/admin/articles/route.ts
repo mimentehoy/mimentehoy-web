@@ -1,33 +1,19 @@
 import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
+import { prisma } from "@/lib/db";
 import { isAdminRequest } from "@/lib/session";
+import { getArticles } from "@/lib/content";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-const getArticlesFilePath = () => path.join(process.cwd(), "data", "articles.json");
+const slugify = (value: string) =>
+  value.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 
-const readArticles = () => {
-  const file = getArticlesFilePath();
-  if (!fs.existsSync(file)) return [];
-  try {
-    const raw = fs.readFileSync(file, "utf8");
-    return JSON.parse(raw);
-  } catch {
-    return [];
+export async function GET(req: Request) {
+  if (!isAdminRequest(req)) {
+    return NextResponse.json({ message: "No autorizado." }, { status: 401 });
   }
-};
-
-const writeArticles = (articles: unknown[]) => {
-  const file = getArticlesFilePath();
-  const dir = path.dirname(file);
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(file, JSON.stringify(articles, null, 2), "utf8");
-};
-
-export async function GET() {
-  return NextResponse.json(readArticles());
+  return NextResponse.json(await getArticles({ includeDrafts: true }));
 }
 
 export async function POST(req: Request) {
@@ -35,39 +21,54 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: "No autorizado." }, { status: 401 });
   }
 
+  if (!process.env.DATABASE_URL) {
+    return NextResponse.json({ message: "Falta configurar la base de datos." }, { status: 503 });
+  }
+
   try {
     const body = await req.json();
-    const article = {
-      id: body.slug || String(body.title || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, ""),
-      title: String(body.title || "").trim(),
-      slug: String(body.slug || body.title || "").trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, ""),
-      description: String(body.description || "").trim(),
-      category: String(body.category || "General").trim(),
-      author: String(body.author || "MIMENTEHOY").trim(),
-      date: String(body.date || new Date().toISOString().slice(0, 10)),
-      status: String(body.status || "borrador").trim(),
-      featured: Boolean(body.featured),
-      tags: Array.isArray(body.tags) ? body.tags : [],
-      seoTitle: String(body.seoTitle || body.title || "").trim(),
-      metaDescription: String(body.metaDescription || body.description || "").trim(),
-      content: String(body.content || "").trim(),
-    };
+    const title = String(body.title || "").trim();
+    const slug = slugify(String(body.slug || body.title || ""));
+    const description = String(body.description || "").trim();
+    const content = String(body.content || "").trim();
 
-    if (!article.title || !article.description || !article.content) {
+    if (!title || !description || !content || !slug) {
       return NextResponse.json({ message: "Faltan campos obligatorios" }, { status: 400 });
     }
 
-    const articles = readArticles();
-    const exists = articles.some((item: any) => item.slug === article.slug);
-    if (exists) {
+    const existing = await prisma.article.findUnique({ where: { slug } });
+    if (existing) {
       return NextResponse.json({ message: "Ya existe un artículo con ese slug" }, { status: 409 });
     }
 
-    articles.unshift(article);
-    writeArticles(articles);
+    const categoryLabel = String(body.category || "General").trim();
+    const status = body.status === "PUBLISHED" ? "PUBLISHED" : "DRAFT";
+
+    const article = await prisma.article.create({
+      data: {
+        slug,
+        title,
+        description,
+        author: String(body.author || "MIMENTEHOY").trim(),
+        status,
+        featured: Boolean(body.featured),
+        tags: Array.isArray(body.tags) ? body.tags.filter((t: unknown): t is string => typeof t === "string") : [],
+        seoTitle: String(body.seoTitle || title).trim(),
+        metaDescription: String(body.metaDescription || description).trim(),
+        content,
+        publishedAt: status === "PUBLISHED" ? new Date(body.date || Date.now()) : null,
+        category: {
+          connectOrCreate: {
+            where: { slug: slugify(categoryLabel) },
+            create: { slug: slugify(categoryLabel), label: categoryLabel },
+          },
+        },
+      },
+    });
 
     return NextResponse.json({ ok: true, article });
-  } catch (_error) {
+  } catch (error) {
+    console.error("Create article error:", error);
     return NextResponse.json({ message: "Error creando el artículo" }, { status: 500 });
   }
 }

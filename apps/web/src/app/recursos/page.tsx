@@ -2,8 +2,8 @@ import Link from "next/link";
 import { SectionHeading } from "@/components/section-heading";
 import { getResources } from "@/lib/content";
 
-export default function RecursosPage() {
-  const resources = getResources();
+export default async function RecursosPage() {
+  const resources = await getResources();
 
   return (
     <main className="container-shell py-10 sm:py-14">

@@ -2,8 +2,8 @@ import Link from "next/link";
 import { SectionHeading } from "@/components/section-heading";
 import { getArticles } from "@/lib/content";
 
-export default function ArticulosPage() {
-  const articles = getArticles();
+export default async function ArticulosPage() {
+  const articles = await getArticles();
 
   return (
     <main className="container-shell py-10 sm:py-14">

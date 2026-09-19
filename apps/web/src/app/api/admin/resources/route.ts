@@ -1,32 +1,19 @@
 import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
+import { prisma } from "@/lib/db";
 import { isAdminRequest } from "@/lib/session";
+import { getResources } from "@/lib/content";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-const getResourcesFilePath = () => path.join(process.cwd(), "data", "resources.json");
+const slugify = (value: string) =>
+  value.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 
-const readResources = () => {
-  const file = getResourcesFilePath();
-  if (!fs.existsSync(file)) return [];
-  try {
-    return JSON.parse(fs.readFileSync(file, "utf8"));
-  } catch {
-    return [];
+export async function GET(req: Request) {
+  if (!isAdminRequest(req)) {
+    return NextResponse.json({ message: "No autorizado." }, { status: 401 });
   }
-};
-
-const writeResources = (items: unknown[]) => {
-  const file = getResourcesFilePath();
-  const dir = path.dirname(file);
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(file, JSON.stringify(items, null, 2), "utf8");
-};
-
-export async function GET() {
-  return NextResponse.json(readResources());
+  return NextResponse.json(await getResources({ includeDrafts: true }));
 }
 
 export async function POST(req: Request) {
@@ -34,35 +21,50 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: "No autorizado." }, { status: 401 });
   }
 
+  if (!process.env.DATABASE_URL) {
+    return NextResponse.json({ message: "Falta configurar la base de datos." }, { status: 503 });
+  }
+
   try {
     const body = await req.json();
-    const item = {
-      id: String(body.slug || body.title || "").trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, ""),
-      title: String(body.title || "").trim(),
-      slug: String(body.slug || body.title || "").trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, ""),
-      category: String(body.category || "General").trim(),
-      type: String(body.type || "PDF").trim(),
-      label: String(body.label || "Gratis").trim(),
-      description: String(body.description || "").trim(),
-      status: String(body.status || "publicado").trim(),
-      downloadUrl: String(body.downloadUrl || "/downloads/default.pdf").trim(),
-      featured: Boolean(body.featured),
-    };
+    const title = String(body.title || "").trim();
+    const slug = slugify(String(body.slug || body.title || ""));
+    const description = String(body.description || "").trim();
 
-    if (!item.title || !item.description) {
+    if (!title || !description || !slug) {
       return NextResponse.json({ message: "Faltan campos obligatorios" }, { status: 400 });
     }
 
-    const items = readResources();
-    const exists = items.some((entry: any) => entry.slug === item.slug);
-    if (exists) {
+    const existing = await prisma.resource.findUnique({ where: { slug } });
+    if (existing) {
       return NextResponse.json({ message: "Ya existe un recurso con ese slug" }, { status: 409 });
     }
 
-    items.unshift(item);
-    writeResources(items);
-    return NextResponse.json({ ok: true, item });
-  } catch {
+    const categoryLabel = String(body.category || "General").trim();
+    const status = body.status === "draft" ? "draft" : "published";
+
+    const resource = await prisma.resource.create({
+      data: {
+        slug,
+        title,
+        description,
+        type: String(body.type || "PDF").trim(),
+        label: String(body.label || "Gratis").trim(),
+        status,
+        downloadUrl: String(body.downloadUrl || "/downloads/default.pdf").trim(),
+        featured: Boolean(body.featured),
+        category: {
+          connectOrCreate: {
+            where: { slug: slugify(categoryLabel) },
+            create: { slug: slugify(categoryLabel), label: categoryLabel },
+          },
+        },
+      },
+    });
+
+    return NextResponse.json({ ok: true, resource });
+  } catch (error) {
+    console.error("Create resource error:", error);
     return NextResponse.json({ message: "Error creando el recurso" }, { status: 500 });
   }
 }

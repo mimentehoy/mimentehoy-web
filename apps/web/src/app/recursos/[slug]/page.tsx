@@ -2,8 +2,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getResourceBySlug, getResources } from "@/lib/content";
 
-export function generateStaticParams() {
-  return getResources().map((resource) => ({ slug: resource.slug }));
+export async function generateStaticParams() {
+  const resources = await getResources();
+  return resources.map((resource) => ({ slug: resource.slug }));
 }
 
 export default async function ResourceDetailPage({
@@ -12,7 +13,7 @@ export default async function ResourceDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const resource = getResourceBySlug(slug);
+  const resource = await getResourceBySlug(slug);
 
   if (!resource) {
     notFound();
