@@ -17,6 +17,9 @@ La V1 no debe volverse un “gran portal” con demasiadas funciones. Debe ser u
 - El hosting real de la app es **Netlify** (`mimentehoy-web`, Next.js Runtime vía `@netlify/plugin-nextjs`), no Hostinger todavía — Hostinger de momento solo aporta el registro del dominio y su DNS.
 - La cuenta de Hostinger también tiene `iant.es` (dominio + email, sin relación con MIMENTEHOY) pero **no tiene ningún plan de hosting contratado**.
 - Se verificó en vivo el panel de Hostinger (hPanel) — ver sección 3, ya resuelta.
+- **Autenticación real** (Fase 5) sobre Postgres: registro/login/logout/cambio de contraseña con contraseñas hasheadas (scrypt), sesión firmada en cookie httpOnly, rol ADMIN por usuario (ya no hay cuenta admin hardcodeada). Verificado de extremo a extremo en producción.
+- **Artículos y recursos migrados de JSON a Postgres real** (Fase 7/8), con CRUD completo (crear/listar/**borrar**) desde `/admin`. El fallback JSON solo se usa si no hay `DATABASE_URL` (dev local sin BD).
+- ⚠️ **Despliegues en pausa hasta el 6 de octubre de 2026**: la cuenta de Netlify (plan Free) agotó sus 300 créditos mensuales — 19 deploys de producción en un solo día consumieron 285, en gran parte por un incidente de empaquetado de Prisma (ver `docs/architecture-overview.md` o el historial de commits alrededor del 19 sept ~15:00–15:45 para el detalle técnico). El sitio sigue en vivo y estable en el último deploy publicado; simplemente no se puede publicar nada nuevo hasta que se renueven los créditos (o se suba de plan, decisión pendiente del usuario). Se puede seguir trabajando y commiteando en local sin coste.
 
 ## 3. Requisitos de Hostinger — RESUELTO (verificado en hPanel el 2026-09-19)
 

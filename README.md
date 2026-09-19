@@ -4,9 +4,10 @@ MIMENTEHOY es una plataforma editorial y de comunidad orientada a contenidos sob
 
 ## Estado actual (actualizado 2026-09-19)
 
-- **[https://mimentehoy.com](https://mimentehoy.com) está en vivo**, con HTTPS: home, artículos, recursos, herramienta de rutinas visuales, newsletter, tienda (Shopify Storefront API con fallback estático) y panel admin básico, sobre un fallback JSON.
-- Hosting real: **Netlify** (proyecto `mimentehoy-web`, deploy automático desde `main` en GitHub). Dominio comprado y DNS gestionado en **Hostinger** (`A`/`CNAME` apuntando a Netlify) — Hostinger todavía no aloja la app en sí.
+- **[https://mimentehoy.com](https://mimentehoy.com) está en vivo**, con HTTPS: home, artículos, recursos (ya en Postgres real, con fallback a JSON solo si no hay `DATABASE_URL`), herramienta de rutinas visuales, newsletter, tienda (Shopify Storefront API con fallback estático), autenticación real (registro/login/roles) y panel admin con CRUD completo.
+- Hosting real: **Netlify** (proyecto `mimentehoy-web`, deploy automático desde `main` en GitHub) + **Postgres gestionado por Netlify** (`@netlify/database`, ver sección "Base de datos" más abajo). Dominio comprado y DNS gestionado en **Hostinger** (`A`/`CNAME` apuntando a Netlify) — Hostinger todavía no aloja la app ni la base de datos.
 - **Sin plan de hosting de Hostinger contratado.** Se verificó en vivo en hPanel que Hostinger compartido solo soporta Node.js + SSH desde el plan **Business**, y que solo ofrece **MySQL** (no PostgreSQL) — ver `docs/hostinger-deployment-checklist.md`.
+- ⚠️ **Despliegues en pausa hasta el 6 de octubre de 2026** — la cuenta Free de Netlify agotó sus créditos mensuales (Usage & billing). El sitio sigue en vivo con el último deploy publicado; solo está bloqueada la publicación de cambios nuevos hasta la renovación (o una subida de plan).
 
 ## Recomendación técnica (confirmada)
 
@@ -101,6 +102,14 @@ El sitio ya está conectado, desplegado y en dominio propio. Así queda montado:
   - `CNAME www → mimentehoy-web.netlify.app`
   - Certificado HTTPS (Let's Encrypt) emitido automáticamente por Netlify.
 - **Newsletter**: `src/app/api/newsletter/route.ts` reenvía a MailerLite directamente vía su API (variable `MAILERLITE_API_KEY` en Netlify → Environment variables) o guarda en un JSON local de fallback si no está configurada. La función independiente `netlify/functions/mailerLiteSubscribe.js` (generada desde `src/mailerLiteSubscribeFunction.js` por `copy-functions.js`) es un resto de una versión anterior — ya no la llama nada del frontend, sigue construyéndose por compatibilidad pero puede limpiarse en el futuro.
-- **Variables de entorno configuradas en Netlify hoy**: solo `MAILERLITE_API_KEY`. Ni `DATABASE_URL`, ni las de Shopify, ni las de `ADMIN_*` están puestas todavía — ver `.env.example` para la lista completa y qué activa cada una.
+- **Variables de entorno configuradas en Netlify**: `MAILERLITE_API_KEY`, `SESSION_SECRET` (secreto, firma las cookies de sesión). Las de Shopify no están puestas todavía — ver `.env.example` para la lista completa. `DATABASE_URL` no hace falta configurarla ahí: la inyecta automáticamente la integración de base de datos (ver abajo).
+- ⚠️ **Despliegues en pausa hasta el 6 de octubre de 2026**: la cuenta Free agotó sus créditos mensuales tras un pico de deploys en un solo día. `git push origin main` sigue funcionando (el código llega a GitHub con normalidad), pero Netlify no reconstruirá hasta la renovación o una subida de plan. Revisar Team settings → Usage & billing antes de asumir que un push se ha publicado.
 
-Para desplegar cambios: `git push origin main` y Netlify reconstruye solo.
+Para desplegar cambios (cuando los créditos lo permitan): `git push origin main` y Netlify reconstruye solo.
+
+## Base de datos (Postgres en Netlify)
+
+- **Producción**: Postgres gestionado por Netlify (`@netlify/database`, plan gratuito), creado desde el dashboard del proyecto → Database. La cadena de conexión (`NETLIFY_DB_URL`) la inyecta Netlify automáticamente en build y runtime — **nunca la hemos visto ni la hemos puesto en ningún sitio**; `apps/web/src/lib/db.ts` hace `DATABASE_URL = DATABASE_URL || NETLIFY_DB_URL` para que Prisma siga leyendo el nombre de variable de siempre.
+- **Cliente de Prisma**: se genera en `apps/web/src/generated/prisma` (no en `node_modules/@prisma/client`, que es el sitio por defecto). Esto es deliberado — hay un `package.json` duplicado que existía en la raíz del monorepo (ya eliminado) que hacía que `prisma generate` escribiera en un `node_modules` distinto según qué hubiera instalado en cada sitio, lo que rompió producción varias veces seguidas el 19 de septiembre de 2026 con `Cannot find module '.prisma/client/default'`. Una ruta de salida explícita (`generator client { output = "..." }` en `prisma/schema.prisma`) elimina esa ambigüedad para siempre — es el enfoque que recomienda el propio Prisma para monorepos. `apps/web/src/generated/` está en `.gitignore`: se regenera en cada build, nunca se commitea.
+- **Build**: `npm run build` ejecuta, en orden, `db:generate` (regenera el cliente) → `db:push` (`prisma db push`, sincroniza el esquema con la base de datos real) → `db:seed` (importa `data/articles.json`/`data/resources.json` la primera vez, solo si el slug no existe ya — nunca sobrescribe ediciones hechas desde `/admin`) → `next build`.
+- **Desarrollo local**: sin `DATABASE_URL` en `.env.local`, la app cae automáticamente al fallback JSON (artículos/recursos) o devuelve "no configurada" (auth, `/db-status`). Para desarrollar contra una base de datos real, apunta `DATABASE_URL` a tu propio Postgres y ejecuta `npm run db:push` manualmente desde `apps/web`.
