@@ -123,13 +123,14 @@ model Resource {
 }
 
 model NewsletterSubscriber {
-  id         String   @id @default(cuid())
-  email      String   @unique
-  name       String?
-  consent    Boolean  @default(false)
-  interests  String[]
-  createdAt  DateTime @default(now())
-  source     String?  @default("website")
+  id             String    @id @default(cuid())
+  email          String    @unique
+  name           String?
+  consent        Boolean   @default(false)
+  interests      String[]
+  createdAt      DateTime  @default(now())
+  source         String?   @default("website")
+  unsubscribedAt DateTime?
 }
 
 model Download {

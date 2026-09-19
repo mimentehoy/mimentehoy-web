@@ -40,6 +40,7 @@ export function SiteFooter() {
               <li><Link href="/tienda">Tienda</Link></li>
               <li><Link href="/tienda">Productos</Link></li>
               <li><Link href="/newsletter">Suscribirse</Link></li>
+              <li><Link href="/newsletter/baja">Darme de baja</Link></li>
             </ul>
           </div>
         </div>

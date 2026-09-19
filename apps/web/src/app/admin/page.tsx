@@ -1,21 +1,8 @@
-import fs from "fs";
-import path from "path";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { AdminAccessGate } from "@/components/auth-shell";
 import { SESSION_COOKIE, verifySessionToken } from "@/lib/session";
 import { prisma } from "@/lib/db";
-
-const readJsonCount = (fileName: string) => {
-  const file = path.join(process.cwd(), "data", fileName);
-  if (!fs.existsSync(file)) return 0;
-  try {
-    const data = JSON.parse(fs.readFileSync(file, "utf8"));
-    return Array.isArray(data) ? data.length : 0;
-  } catch {
-    return 0;
-  }
-};
 
 export default async function AdminPage() {
   const cookieStore = await cookies();
@@ -24,17 +11,20 @@ export default async function AdminPage() {
 
   let articleCount = "—";
   let resourceCount = "—";
+  let subscriberCount = "—";
   let userCount = "—";
 
   if (isAdmin && process.env.DATABASE_URL) {
     try {
-      const [articles, resources, users] = await Promise.all([
+      const [articles, resources, subscribers, users] = await Promise.all([
         prisma.article.count(),
         prisma.resource.count(),
+        prisma.newsletterSubscriber.count({ where: { unsubscribedAt: null } }),
         prisma.user.count(),
       ]);
       articleCount = String(articles);
       resourceCount = String(resources);
+      subscriberCount = String(subscribers);
       userCount = String(users);
     } catch {
       // leave dashes — db-status page has the details
@@ -45,7 +35,7 @@ export default async function AdminPage() {
     ? [
         { label: "Artículos", value: articleCount },
         { label: "Recursos", value: resourceCount },
-        { label: "Newsletter", value: String(readJsonCount("newsletter-subscribers.json")) },
+        { label: "Newsletter", value: subscriberCount },
         { label: "Usuarios", value: userCount },
       ]
     : [];
