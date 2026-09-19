@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { cookies } from "next/headers";
 import { AdminAccessGate } from "@/components/auth-shell";
-import { ADMIN_SESSION_COOKIE, verifyAdminSessionToken } from "@/lib/admin-session";
+import { SESSION_COOKIE, verifySessionToken } from "@/lib/session";
 
 const readSubscribers = () => {
   const file = path.join(process.cwd(), "data", "newsletter-subscribers.json");
@@ -33,8 +33,8 @@ export default async function AdminNewsletterPage() {
   // into that payload unless the request actually carries a valid admin
   // session cookie.
   const cookieStore = await cookies();
-  const hasAdminSession = verifyAdminSessionToken(cookieStore.get(ADMIN_SESSION_COOKIE)?.value);
-  const subscribers = hasAdminSession ? (readSubscribers() as Subscriber[]) : [];
+  const session = verifySessionToken(cookieStore.get(SESSION_COOKIE)?.value);
+  const subscribers = session?.role === "ADMIN" ? (readSubscribers() as Subscriber[]) : [];
   const total = subscribers.length;
 
   return (

@@ -3,7 +3,7 @@ import path from "path";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { AdminAccessGate } from "@/components/auth-shell";
-import { ADMIN_SESSION_COOKIE, verifyAdminSessionToken } from "@/lib/admin-session";
+import { SESSION_COOKIE, verifySessionToken } from "@/lib/session";
 
 const readResources = () => {
   const file = path.join(process.cwd(), "data", "resources.json");
@@ -24,8 +24,8 @@ type ResourceItem = {
 
 export default async function AdminRecursosPage() {
   const cookieStore = await cookies();
-  const hasAdminSession = verifyAdminSessionToken(cookieStore.get(ADMIN_SESSION_COOKIE)?.value);
-  const items = hasAdminSession ? (readResources() as ResourceItem[]) : [];
+  const session = verifySessionToken(cookieStore.get(SESSION_COOKIE)?.value);
+  const items = session?.role === "ADMIN" ? (readResources() as ResourceItem[]) : [];
 
   return (
     <AdminAccessGate>

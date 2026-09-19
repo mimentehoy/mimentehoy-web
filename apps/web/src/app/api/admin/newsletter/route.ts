@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { NextResponse } from "next/server";
-import { isAdminRequest } from "@/lib/admin-session";
+import { isAdminRequest } from "@/lib/session";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";

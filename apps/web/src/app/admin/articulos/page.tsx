@@ -3,7 +3,7 @@ import path from "path";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { AdminAccessGate } from "@/components/auth-shell";
-import { ADMIN_SESSION_COOKIE, verifyAdminSessionToken } from "@/lib/admin-session";
+import { SESSION_COOKIE, verifySessionToken } from "@/lib/session";
 
 const readArticles = () => {
   const file = path.join(process.cwd(), "data", "articles.json");
@@ -30,8 +30,8 @@ export default async function AdminArticulosPage() {
   // unless the request carries a valid admin session (see admin/newsletter
   // for why this matters even though AdminAccessGate also gates rendering).
   const cookieStore = await cookies();
-  const hasAdminSession = verifyAdminSessionToken(cookieStore.get(ADMIN_SESSION_COOKIE)?.value);
-  const articles = hasAdminSession ? (readArticles() as ArticleSummary[]) : [];
+  const session = verifySessionToken(cookieStore.get(SESSION_COOKIE)?.value);
+  const articles = session?.role === "ADMIN" ? (readArticles() as ArticleSummary[]) : [];
 
   return (
     <AdminAccessGate>

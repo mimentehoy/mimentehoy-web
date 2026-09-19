@@ -3,13 +3,13 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { navItems } from "@/data/site";
-import { getCurrentUser } from "@/lib/auth";
+import { fetchCurrentUser } from "@/lib/client-auth";
 
 export function SiteHeader() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    setIsLoggedIn(Boolean(getCurrentUser()));
+    fetchCurrentUser().then((user) => setIsLoggedIn(Boolean(user)));
   }, []);
 
   return (

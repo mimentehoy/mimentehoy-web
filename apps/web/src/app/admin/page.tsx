@@ -1,10 +1,13 @@
 import fs from "fs";
 import path from "path";
 import Link from "next/link";
+import { cookies } from "next/headers";
 import { AdminAccessGate } from "@/components/auth-shell";
+import { SESSION_COOKIE, verifySessionToken } from "@/lib/session";
+import { prisma } from "@/lib/db";
 
-const readArticleCount = () => {
-  const file = path.join(process.cwd(), "data", "articles.json");
+const readJsonCount = (fileName: string) => {
+  const file = path.join(process.cwd(), "data", fileName);
   if (!fs.existsSync(file)) return 0;
   try {
     const data = JSON.parse(fs.readFileSync(file, "utf8"));
@@ -14,14 +17,28 @@ const readArticleCount = () => {
   }
 };
 
-export default function AdminPage() {
-  const articleCount = readArticleCount();
-  const stats = [
-    { label: "Artículos", value: String(articleCount) },
-    { label: "Recursos", value: "4" },
-    { label: "Newsletter", value: "3" },
-    { label: "Usuarios", value: "182" },
-  ];
+export default async function AdminPage() {
+  const cookieStore = await cookies();
+  const session = verifySessionToken(cookieStore.get(SESSION_COOKIE)?.value);
+  const isAdmin = session?.role === "ADMIN";
+
+  let userCount = "—";
+  if (isAdmin && process.env.DATABASE_URL) {
+    try {
+      userCount = String(await prisma.user.count());
+    } catch {
+      userCount = "—";
+    }
+  }
+
+  const stats = isAdmin
+    ? [
+        { label: "Artículos", value: String(readJsonCount("articles.json")) },
+        { label: "Recursos", value: String(readJsonCount("resources.json")) },
+        { label: "Newsletter", value: String(readJsonCount("newsletter-subscribers.json")) },
+        { label: "Usuarios", value: userCount },
+      ]
+    : [];
 
   return (
     <AdminAccessGate>
