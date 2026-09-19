@@ -22,3 +22,6 @@ apps/web/data/newsletter-subscribers.json
 
 # Generated at build time by copy-functions.js — not source
 apps/web/netlify/functions/
+
+# Local Playwright MCP browser session artifacts (screenshots, snapshots)
+.playwright-mcp/

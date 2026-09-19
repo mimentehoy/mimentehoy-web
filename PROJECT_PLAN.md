@@ -10,31 +10,30 @@ Valor -> Confianza -> Registro -> Recurrencia -> Comunidad -> Monetización
 
 La V1 no debe volverse un “gran portal” con demasiadas funciones. Debe ser una experiencia mínima, rápida, premium y muy útil para móvil.
 
-## 2. Estado de auditoría actual
+## 2. Estado de auditoría actual (actualizado 2026-09-19)
 
-- El repositorio actual está vacío.
-- No hay código previo ni estructura técnica implementada.
-- No se ha confirmado la configuración de Hostinger ni el plan concreto contratado.
-- La arquitectura definitiva se basará en el nivel real de acceso a Node.js, bases de datos, SSH y despliegue.
+- El proyecto ya tiene V1 en desarrollo: home, artículos, recursos, herramienta de rutinas, newsletter, tienda y panel admin básico funcionando en local sobre un fallback JSON (ver `docs/architecture-overview.md`).
+- **Dominio `mimentehoy.com` comprado** en la cuenta de Hostinger del usuario (término 1 año, vence 2027-09-19). Estado al comprarlo: "Verificación pendiente" — hay que confirmar el email de contacto WHOIS (requisito de ICANN) o el registrador puede suspenderlo.
+- La cuenta de Hostinger también tiene `iant.es` (dominio + email, sin relación con MIMENTEHOY) pero **no tiene ningún plan de hosting contratado todavía**.
+- Se verificó en vivo el panel de Hostinger (hPanel) — ver sección 3, ya resuelta.
 
-## 3. Requisitos de Hostinger que necesitamos confirmar
+## 3. Requisitos de Hostinger — RESUELTO (verificado en hPanel el 2026-09-19)
 
-Antes de decidir el stack final, necesitamos saber si el plan de Hostinger permite lo siguiente:
+Tabla real de soporte por plan de hosting compartido de Hostinger:
 
-- Node.js
-- SSH
-- MySQL
-- PostgreSQL
-- despliegue Git
-- aplicaciones persistentes
-- cron jobs
-- variables de entorno
-- almacenamiento / volumen de archivos
-- backups y restauración
+| | Single | Premium | Business | Cloud |
+|---|---|---|---|---|
+| Node.js (apps web) | ❌ | ❌ | ✅ | ✅ |
+| SSH | ❌ | ✅ | ✅ | ✅ |
+| Git | ✅ | ✅ | ✅ | ✅ |
+| Bases de datos MySQL | 2 | 10 | 150 | 300 |
+| PostgreSQL | No disponible en ningún plan de hosting compartido | | | |
+| Cron jobs | 2 | Ilimitados | Ilimitados | Ilimitados |
+| Precio renovación | 6,99 €/mes | 9,99 €/mes | 16,99 €/mes | desde 23,99 €/mes |
 
-Si se cumplen estas condiciones, la recomendación será mantener Hostinger como base principal y usar Next.js + PostgreSQL + Prisma.
+**Conclusión**: el plan **Business** es el mínimo que soporta Node.js + SSH + cron ilimitados. Hostinger compartido **no ofrece PostgreSQL**, solo MySQL — el `provider` de `prisma/schema.prisma` deberá pasar de `postgresql` a `mysql` antes de desplegar ahí (o usar un VPS si se quiere mantener Postgres).
 
-Si hay una limitación importante, se documentará y se propondrá una alternativa antes de implementar.
+Pendiente: el usuario aún no ha contratado ningún plan de hosting — de momento se sigue desarrollando en local con el fallback JSON.
 
 ## 4. Stack recomendado (condicional a Hostinger)
 
@@ -297,12 +296,12 @@ Necesitaremos, sin pedir secretos en chat:
 
 ## 14. Decisiones pendientes que bloquean la implementación técnica
 
-- plan concreto de Hostinger
-- acceso a bash/SSH y configuración del servidor
-- tipo de base de datos disponible
-- estrategia de emails para newsletter
-- si se usará PostgreSQL o MySQL como base principal
-- si se desea despliegue con Node.js en Hostinger o arquitectura alternativa
+- ~~plan concreto de Hostinger~~ → **resuelto**: no había ninguno contratado; se necesita el plan **Business** para Node.js + SSH. Pendiente que el usuario lo compre.
+- ~~acceso a bash/SSH~~ → **resuelto**: SSH disponible desde Premium en adelante (ver sección 3).
+- ~~tipo de base de datos disponible~~ → **resuelto**: solo MySQL en hosting compartido, no PostgreSQL.
+- estrategia de emails para newsletter — sigue pendiente (MailerLite ya integrado como opción, ver `docs/architecture-overview.md`)
+- ~~si se usará PostgreSQL o MySQL~~ → **resuelto**: MySQL (Hostinger no ofrece Postgres en compartido). Hay que migrar `prisma/schema.prisma` de `postgresql` a `mysql` antes del primer deploy ahí.
+- ~~si se desea despliegue con Node.js en Hostinger~~ → **resuelto**: sí, vía plan Business (Web Apps / Node.js)
 
 ## 15. Criterios de aceptación del proyecto
 

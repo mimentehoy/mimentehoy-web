@@ -2,33 +2,22 @@
 
 MIMENTEHOY es una plataforma editorial y de comunidad orientada a contenidos sobre TDAH, autismo, crianza, salud mental, hábitos, sueño, relaciones y neurodivergencia. El objetivo es convertir la audiencia de redes sociales en una audiencia propia, ofreciendo contenido útil, recursos descargables, herramientas prácticas, newsletter y un puente hacia productos y Shopify.
 
-## Estado actual
+## Estado actual (actualizado 2026-09-19)
 
-- Fase 0: auditoría, arquitectura y planificación inicial.
-- El repositorio está vacío y no hay código previo en este proyecto.
-- La arquitectura definitiva dependerá de la configuración real del hosting de Hostinger.
+- V1 en desarrollo local: home, artículos, recursos, herramienta de rutinas visuales, newsletter, tienda y panel admin básico, sobre un fallback JSON.
+- **Dominio `mimentehoy.com` ya comprado** en Hostinger (1 año, vence 2027-09-19 — verificar el email de contacto WHOIS si Hostinger lo pide).
+- **Sin plan de hosting contratado todavía.** Se verificó en vivo en hPanel que Hostinger compartido solo soporta Node.js + SSH desde el plan **Business**, y que solo ofrece **MySQL** (no PostgreSQL) — ver `docs/hostinger-deployment-checklist.md`.
 
-## Recomendación técnica inicial
+## Recomendación técnica (confirmada)
 
-Si el plan de Hostinger permite:
+Plan de hosting recomendado cuando se contrate: **Business** — es el mínimo con Node.js + SSH + cron ilimitados en Hostinger compartido.
 
-- Node.js
-- SSH
-- PostgreSQL o MySQL
-- Git deployment
-- cron jobs
-- variables de entorno
-- almacenamiento y backups
-
-la opción recomendada para la V1 es:
-
-- Next.js 14+ con App Router
+- Next.js 16 con App Router
 - TypeScript
 - Tailwind CSS
 - Prisma ORM
-- PostgreSQL
-- Autenticación con NextAuth o Auth.js
-- PostgreSQL como base de datos principal
+- **MySQL** como base de datos principal — Hostinger compartido no ofrece PostgreSQL en ningún plan; `prisma/schema.prisma` debe migrar de `postgresql` a `mysql`
+- Autenticación con NextAuth/Auth.js sobre esa base de datos (la auth actual es un prototipo local, ver `docs/architecture-overview.md`)
 - Shopify como motor de ecommerce y checkout externo
 
 Esto prioriza seguridad, SEO, velocidad, mantenibilidad y escalabilidad sin depender de servicios externos innecesarios.
