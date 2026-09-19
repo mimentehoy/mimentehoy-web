@@ -67,7 +67,7 @@ export function LoginForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleSubmit = (event: FormEvent) => {
+  const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     const users = readUsers();
     const match = users.find((user) => user.email.toLowerCase() === email.toLowerCase() && user.password === password);
@@ -78,6 +78,27 @@ export function LoginForm() {
     }
 
     saveSession(match.email);
+
+    if (match.isAdmin) {
+      // The admin gate below only decides what the UI *shows* — the CMS
+      // write/read API routes check a separate, server-signed cookie. Try
+      // to establish it here so the demo login also unlocks them. If the
+      // server hasn't been given ADMIN_EMAIL/ADMIN_PASSWORD yet this fails
+      // quietly and the admin pages simply show empty/401 until it's set.
+      try {
+        const res = await fetch("/api/admin/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        });
+        if (!res.ok) {
+          console.warn("No se pudo iniciar la sesión de administrador en el servidor. Revisa ADMIN_EMAIL/ADMIN_PASSWORD/ADMIN_SESSION_SECRET en tu .env.");
+        }
+      } catch {
+        console.warn("No se pudo contactar con /api/admin/login.");
+      }
+    }
+
     router.push("/mi-mimentehoy");
   };
 
@@ -225,6 +246,7 @@ export function AccountPanel() {
 
   const handleLogout = () => {
     clearSession();
+    fetch("/api/admin/login", { method: "DELETE" }).catch(() => {});
     router.push("/");
   };
 

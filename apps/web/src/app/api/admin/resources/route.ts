@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
+import { isAdminRequest } from "@/lib/admin-session";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -29,6 +30,10 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
+  if (!isAdminRequest(req)) {
+    return NextResponse.json({ message: "No autorizado." }, { status: 401 });
+  }
+
   try {
     const body = await req.json();
     const item = {

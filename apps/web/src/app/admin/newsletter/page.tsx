@@ -1,7 +1,9 @@
 import Link from "next/link";
 import fs from "fs";
 import path from "path";
+import { cookies } from "next/headers";
 import { AdminAccessGate } from "@/components/auth-shell";
+import { ADMIN_SESSION_COOKIE, verifyAdminSessionToken } from "@/lib/admin-session";
 
 const readSubscribers = () => {
   const file = path.join(process.cwd(), "data", "newsletter-subscribers.json");
@@ -22,8 +24,17 @@ type Subscriber = {
   interests?: string[];
 };
 
-export default function AdminNewsletterPage() {
-  const subscribers = readSubscribers() as Subscriber[];
+export default async function AdminNewsletterPage() {
+  // Server-side gate BEFORE reading any subscriber data: AdminAccessGate below
+  // only decides what to *render* on the client, but a Server Component's
+  // output (including anything passed as children) still ships to the
+  // browser in the RSC payload regardless of what the client chooses to
+  // paint. Subscriber emails are personal data, so they must never be read
+  // into that payload unless the request actually carries a valid admin
+  // session cookie.
+  const cookieStore = await cookies();
+  const hasAdminSession = verifyAdminSessionToken(cookieStore.get(ADMIN_SESSION_COOKIE)?.value);
+  const subscribers = hasAdminSession ? (readSubscribers() as Subscriber[]) : [];
   const total = subscribers.length;
 
   return (

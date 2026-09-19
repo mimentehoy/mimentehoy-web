@@ -1,7 +1,9 @@
 import fs from "fs";
 import path from "path";
 import Link from "next/link";
+import { cookies } from "next/headers";
 import { AdminAccessGate } from "@/components/auth-shell";
+import { ADMIN_SESSION_COOKIE, verifyAdminSessionToken } from "@/lib/admin-session";
 
 const readArticles = () => {
   const file = path.join(process.cwd(), "data", "articles.json");
@@ -23,8 +25,13 @@ type ArticleSummary = {
   tags?: string[];
 };
 
-export default function AdminArticulosPage() {
-  const articles = readArticles() as ArticleSummary[];
+export default async function AdminArticulosPage() {
+  // Drafts aren't public yet — don't read them into the server payload
+  // unless the request carries a valid admin session (see admin/newsletter
+  // for why this matters even though AdminAccessGate also gates rendering).
+  const cookieStore = await cookies();
+  const hasAdminSession = verifyAdminSessionToken(cookieStore.get(ADMIN_SESSION_COOKIE)?.value);
+  const articles = hasAdminSession ? (readArticles() as ArticleSummary[]) : [];
 
   return (
     <AdminAccessGate>
