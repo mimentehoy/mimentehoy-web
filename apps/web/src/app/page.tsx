@@ -1,108 +1,36 @@
 import Link from "next/link";
 import { NewsletterBox } from "@/components/newsletter-box";
 import { SectionHeading } from "@/components/section-heading";
-import {
-  categories,
-  featuredArticles,
-  metrics,
-  productCards,
-  resources,
-  toolHighlights,
-  weeklyHighlights,
-} from "@/data/site";
+import { productCards, resources, toolHighlights } from "@/data/site";
 
 export default function Home() {
   return (
     <main className="pb-20">
       <section className="container-shell pt-8 sm:pt-10">
         <div className="section-shell overflow-hidden p-5 sm:p-8 lg:p-10">
-          <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
-            <div>
-              <span className="soft-label">MIMENTEHOY</span>
-              <h1 className="mt-5 max-w-xl text-4xl font-semibold tracking-[-0.06em] text-[#001733] sm:text-5xl lg:text-6xl">
-                Entenderles <span className="gradient-text">cambia la forma</span> de ayudarles.
-              </h1>
-              <p className="mt-5 max-w-xl text-base leading-7 text-stone-600 sm:text-lg">
-                Artículos, recursos prácticos y herramientas útiles para familias, crianza, TDAH, autismo y salud mental.
-              </p>
+          <div className="max-w-2xl">
+            <span className="soft-label">MIMENTEHOY</span>
+            <h1 className="mt-5 max-w-xl text-4xl font-semibold tracking-[-0.06em] text-[#001733] sm:text-5xl lg:text-6xl">
+              Entenderles <span className="gradient-text">cambia la forma</span> de ayudarles.
+            </h1>
+            <p className="mt-5 max-w-xl text-base leading-7 text-stone-600 sm:text-lg">
+              Artículos, recursos prácticos y herramientas útiles para familias, crianza, TDAH, autismo y salud mental.
+            </p>
 
-              <div className="mt-7 flex flex-wrap gap-3">
-                <Link href="/articulos" className="primary-button">
-                  Explorar artículos
-                </Link>
-                <Link href="/recursos" className="secondary-button">
-                  Recursos gratuitos
-                </Link>
-              </div>
-            </div>
-
-            <div className="rounded-[28px] bg-[#201913] p-5 text-white shadow-[0_20px_60px_rgba(32,25,19,0.2)]">
-              <div className="flex items-center justify-between text-sm text-stone-200">
-                <span>Lo nuevo esta semana</span>
-                <span>•</span>
-              </div>
-              <div className="mt-6 space-y-4">
-                {weeklyHighlights.slice(0, 2).map((item) => (
-                  <div key={item.title} className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <div className="text-xs uppercase tracking-[0.16em] text-[#f0c1aa]">{item.category}</div>
-                    <h3 className="mt-2 text-lg font-semibold leading-6">{item.title}</h3>
-                    <p className="mt-2 text-sm leading-6 text-stone-200">{item.summary}</p>
-                  </div>
-                ))}
-              </div>
+            <div className="mt-7 flex flex-wrap gap-3">
+              <Link href="/articulos" className="primary-button">
+                Explorar artículos
+              </Link>
+              <Link href="/recursos" className="secondary-button">
+                Recursos gratuitos
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
       <section className="container-shell mt-10">
-        <SectionHeading
-          eyebrow="Métricas"
-          title="Todo se entiende mejor cuando ayuda a la vida real"
-          description="Una base editorial clara, útil y fácil de volver a visitar desde móvil."
-        />
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {metrics.map((metric) => (
-            <div key={metric.label} className="section-shell p-5 text-center">
-              <div className="text-3xl font-semibold tracking-tight text-stone-900">{metric.value}</div>
-              <div className="mt-2 text-sm text-stone-600">{metric.label}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="container-shell mt-12">
-        <SectionHeading eyebrow="Explora" title="Temas que más ayudan a familias y educadores" />
-        <div className="flex flex-wrap gap-3">
-          {categories.map((category) => (
-            <Link key={category} href="/articulos" className="link-pill">
-              {category}
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      <section className="container-shell mt-12">
-        <SectionHeading
-          eyebrow="Lo nuevo"
-          title="Artículos que aportan valor y claridad"
-          description="Pensados para volver, compartir y guardar como referencia útil."
-        />
-        <div className="grid gap-5 lg:grid-cols-3">
-          {featuredArticles.map((article) => (
-            <article key={article.title} className="section-shell overflow-hidden p-5">
-              <div className="mb-4 flex items-center justify-between">
-                <span className="soft-label">{article.category}</span>
-                <span className="text-xs text-stone-500">{article.readTime}</span>
-              </div>
-              <h3 className="text-xl font-semibold text-stone-900">{article.title}</h3>
-              <p className="mt-3 text-sm leading-6 text-stone-600">{article.description}</p>
-              <Link href="/articulos" className="mt-5 inline-flex text-sm font-semibold text-[#7a4a35]">
-                Leer artículo →
-              </Link>
-            </article>
-          ))}
-        </div>
+        <NewsletterBox />
       </section>
 
       <section className="container-shell mt-12">
@@ -144,10 +72,6 @@ export default function Home() {
             </div>
           ))}
         </div>
-      </section>
-
-      <section className="container-shell mt-12">
-        <NewsletterBox />
       </section>
 
       <section className="container-shell mt-12">

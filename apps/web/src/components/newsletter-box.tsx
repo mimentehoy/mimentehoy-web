@@ -58,25 +58,22 @@ export function NewsletterBox() {
 
   return (
     <div className="section-shell bg-[#efe4d7] p-6 sm:p-8">
-      <div className="grid gap-6 md:grid-cols-[1.3fr_0.7fr] md:items-center">
-        <div>
-          <span className="soft-label">Newsletter</span>
-          <h3 className="mt-4 text-2xl font-semibold tracking-tight text-stone-900">Recibe ideas útiles cada semana</h3>
-          <p className="mt-2 max-w-lg text-sm leading-6 text-stone-700">
-            Mensajes sencillos, claros y útiles para familias que buscan soluciones reales sin ruido.
-          </p>
-        </div>
+      <div className="mx-auto max-w-2xl text-center">
+        <span className="soft-label">Newsletter</span>
+        <h3 className="mt-4 text-2xl font-semibold tracking-tight text-stone-900">Recibe ideas útiles cada semana</h3>
+        <p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-stone-700">
+          Mensajes sencillos, claros y útiles para familias que buscan soluciones reales sin ruido.
+        </p>
+      </div>
 
-        <form
-          onSubmit={handleSubmit}
-          className="flex flex-col gap-3 sm:flex-row md:flex-col xl:flex-row"
-        >
+      <form onSubmit={handleSubmit} className="mx-auto mt-6 max-w-2xl">
+        <div className="flex flex-col gap-3 sm:flex-row">
           <input
             name="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Tu nombre (opcional)"
-            className="h-12 w-full rounded-full border border-stone-300 bg-white px-4 text-sm outline-none placeholder:text-stone-400 focus:border-stone-500"
+            className="h-12 w-full rounded-full border border-stone-300 bg-white px-4 text-sm outline-none placeholder:text-stone-400 focus:border-stone-500 sm:flex-1"
           />
 
           <input
@@ -86,45 +83,43 @@ export function NewsletterBox() {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Tu email"
             required
-            className="h-12 flex-1 rounded-full border border-stone-300 bg-white px-4 text-sm outline-none placeholder:text-stone-400 focus:border-stone-500"
+            className="h-12 rounded-full border border-stone-300 bg-white px-4 text-sm outline-none placeholder:text-stone-400 focus:border-stone-500 sm:flex-1"
             aria-label="Email"
           />
 
-          <div className="flex items-center gap-3">
-            <button type="submit" className="primary-button h-12 min-w-[140px]" disabled={status === "loading"}>
-              {status === "loading" ? "Enviando…" : "Suscribirme"}
-            </button>
-          </div>
+          <button type="submit" className="primary-button h-12 shrink-0" disabled={status === "loading"}>
+            {status === "loading" ? "Enviando…" : "Suscribirme"}
+          </button>
+        </div>
 
-          <div className="col-span-full mt-3 text-sm text-stone-600">
-            <label className="inline-flex items-center gap-2">
-              <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} required />
-              Acepto recibir la newsletter y doy mi consentimiento (RGPD).
-            </label>
-          </div>
+        <div className="mt-4 text-center text-sm text-stone-600">
+          <label className="inline-flex items-center gap-2">
+            <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} required />
+            Acepto recibir la newsletter y doy mi consentimiento (RGPD).
+          </label>
+        </div>
 
-          <div className="col-span-full mt-3 text-sm text-stone-600">
-            <div className="mb-2 text-xs font-semibold text-stone-700">Me interesan:</div>
-            <div className="flex flex-wrap gap-2">
-              {categories.map((cat) => (
-                <label key={cat} className="inline-flex items-center gap-2 rounded-full border border-stone-200 bg-stone-50 px-3 py-1 text-xs">
-                  <input
-                    type="checkbox"
-                    name="interests"
-                    value={cat}
-                    checked={interests.includes(cat)}
-                    onChange={() => toggleInterest(cat)}
-                  />
-                  <span>{cat}</span>
-                </label>
-              ))}
-            </div>
+        <div className="mt-4 text-center text-sm text-stone-600">
+          <div className="mb-2 text-xs font-semibold text-stone-700">Me interesan:</div>
+          <div className="flex flex-wrap justify-center gap-2">
+            {categories.map((cat) => (
+              <label key={cat} className="inline-flex items-center gap-2 rounded-full border border-stone-200 bg-stone-50 px-3 py-1 text-xs">
+                <input
+                  type="checkbox"
+                  name="interests"
+                  value={cat}
+                  checked={interests.includes(cat)}
+                  onChange={() => toggleInterest(cat)}
+                />
+                <span>{cat}</span>
+              </label>
+            ))}
           </div>
+        </div>
 
-          {status === "success" && <div className="col-span-full mt-3 text-sm font-semibold text-green-700">¡Gracias! Revisa tu bandeja de entrada.</div>}
-          {status === "error" && <div className="col-span-full mt-3 text-sm font-semibold text-red-700">Hubo un error. Por favor, inténtalo de nuevo.</div>}
-        </form>
-      </div>
+        {status === "success" && <div className="mt-3 text-center text-sm font-semibold text-green-700">¡Gracias! Revisa tu bandeja de entrada.</div>}
+        {status === "error" && <div className="mt-3 text-center text-sm font-semibold text-red-700">Hubo un error. Por favor, inténtalo de nuevo.</div>}
+      </form>
     </div>
   );
 }
