@@ -22,8 +22,8 @@ export default function TiendaPage() {
             <p className="mt-3 text-sm leading-6 text-stone-600">
               Producto diseñado para apoyar familias, rutinas, educación y neurodivergencia con soluciones concretas.
             </p>
-            <Link href="https://shopify.com" className="mt-5 inline-flex text-sm font-semibold text-[#7a4a35]" target="_blank" rel="noreferrer">
-              Ver en Shopify →
+            <Link href={`/tienda/${product.slug}`} className="mt-5 inline-flex text-sm font-semibold text-[#7a4a35]">
+              Ver producto →
             </Link>
           </article>
         ))}
