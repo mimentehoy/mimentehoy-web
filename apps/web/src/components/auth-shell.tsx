@@ -300,7 +300,6 @@ export function AccountPanel() {
           { title: "Mis descargas", description: "Archivos y plantillas disponibles" },
           { title: "Mis favoritos", description: "Artículos y recursos guardados" },
           { title: "Mis intereses", description: "Gestiona tus temas favoritos" },
-          { title: "Mi cuenta", description: "Detalles del perfil" },
           { title: "Newsletter", description: "Estado de suscripción" },
         ].map((card) => (
           <div key={card.title} className="section-shell p-5">
@@ -308,7 +307,113 @@ export function AccountPanel() {
             <p className="mt-2 text-sm leading-6 text-stone-600">{card.description}</p>
           </div>
         ))}
+
+        <ChangePasswordCard />
       </div>
     </main>
+  );
+}
+
+function ChangePasswordCard() {
+  const [open, setOpen] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (event: FormEvent) => {
+    event.preventDefault();
+    setError("");
+    setSuccess(false);
+
+    if (newPassword !== confirmPassword) {
+      setError("Las contraseñas nuevas no coinciden.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await fetch("/api/auth/change-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ currentPassword, newPassword }),
+      });
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        setError(data.message || "No se pudo cambiar la contraseña.");
+        return;
+      }
+
+      setSuccess(true);
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+    } catch {
+      setError("No se pudo contactar con el servidor. Inténtalo de nuevo.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (!open) {
+    return (
+      <div className="section-shell p-5">
+        <h2 className="text-xl font-semibold text-stone-900">Mi cuenta</h2>
+        <p className="mt-2 text-sm leading-6 text-stone-600">Detalles del perfil</p>
+        <button onClick={() => setOpen(true)} className="mt-4 text-sm font-semibold text-[#7a4a35]">
+          Cambiar contraseña →
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="section-shell p-5">
+      <h2 className="text-xl font-semibold text-stone-900">Cambiar contraseña</h2>
+
+      <form onSubmit={handleSubmit} className="mt-4 space-y-3">
+        <input
+          type="password"
+          placeholder="Contraseña actual"
+          value={currentPassword}
+          onChange={(e) => setCurrentPassword(e.target.value)}
+          className="h-11 w-full rounded-full border border-stone-300 bg-white px-4 text-sm outline-none focus:border-stone-500"
+          required
+        />
+        <input
+          type="password"
+          placeholder="Nueva contraseña"
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+          minLength={8}
+          className="h-11 w-full rounded-full border border-stone-300 bg-white px-4 text-sm outline-none focus:border-stone-500"
+          required
+        />
+        <input
+          type="password"
+          placeholder="Repite la nueva contraseña"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          minLength={8}
+          className="h-11 w-full rounded-full border border-stone-300 bg-white px-4 text-sm outline-none focus:border-stone-500"
+          required
+        />
+
+        {error && <p className="text-sm text-red-600">{error}</p>}
+        {success && <p className="text-sm font-medium text-green-700">Contraseña actualizada.</p>}
+
+        <div className="flex gap-2">
+          <button type="submit" className="primary-button flex-1" disabled={loading}>
+            {loading ? "Guardando…" : "Guardar"}
+          </button>
+          <button type="button" onClick={() => setOpen(false)} className="secondary-button">
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
   );
 }
