@@ -16,7 +16,7 @@ if (!databaseUrl) {
 
 process.env.DATABASE_URL = databaseUrl;
 
-const { PrismaClient } = require("@prisma/client");
+const { PrismaClient } = require("../src/generated/prisma");
 const prisma = new PrismaClient();
 
 const slugify = (value) =>

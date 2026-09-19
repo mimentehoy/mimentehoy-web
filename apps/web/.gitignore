@@ -42,3 +42,6 @@ next-env.d.ts
 
 # Local Netlify folder
 .netlify
+
+# Generated Prisma client (see prisma/schema.prisma's generator output path)
+/src/generated

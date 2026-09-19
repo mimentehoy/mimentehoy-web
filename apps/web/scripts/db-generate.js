@@ -1,24 +1,21 @@
-// Wraps `prisma generate` but first deletes the previously generated client
-// code (node_modules/.prisma) — NOT the @prisma/client package itself,
-// which is an installed npm dependency that `prisma generate` never
-// reinstalls; deleting that left the Netlify build with no @prisma/client
-// at all for the rest of the build (MODULE_NOT_FOUND at runtime, since
-// there's a single node_modules there, unlike a local monorepo checkout
-// that can fall back to a root-level copy).
+// Wraps `prisma generate`. The client now generates into
+// src/generated/prisma (see prisma/schema.prisma's generator block) instead
+// of node_modules/@prisma/client — that default location turned out to
+// resolve inconsistently in this monorepo (a root-level package.json also
+// lists @prisma/client for local tooling), which twice broke the deployed
+// site with "Cannot find module '.prisma/client/default'" despite clean
+// builds. Generating into the app's own source tree removes the ambiguity:
+// it's always relative to this schema file, never dependent on which
+// node_modules a resolver happens to pick.
 //
-// Netlify caches node_modules between builds. We saw a real case where that
-// cache restored generated client code from an older schema (missing a
-// field added since) even though `prisma generate` ran again in this build
-// with the current schema.prisma checked out — Prisma's own generation
-// appears to short-circuit under some cache-restore conditions rather than
-// reliably detecting the schema changed. Deleting node_modules/.prisma
-// first removes any chance of that.
+// Deletes the output directory first — cheap, and guarantees no stale
+// generated code survives from a previous run.
 
 const fs = require("fs");
 const path = require("path");
 const { spawnSync } = require("node:child_process");
 
-fs.rmSync(path.join(__dirname, "..", "node_modules", ".prisma"), { recursive: true, force: true });
+fs.rmSync(path.join(__dirname, "..", "src", "generated"), { recursive: true, force: true });
 
 const result = spawnSync("npx", ["prisma", "generate", "--schema", "../../prisma/schema.prisma"], {
   stdio: "inherit",

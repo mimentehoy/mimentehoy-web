@@ -3,6 +3,17 @@
 
 generator client {
   provider = "prisma-client-js"
+  // Generating into node_modules/@prisma/client (the default) turned out to
+  // be non-deterministic in this monorepo — a root-level package.json also
+  // lists @prisma/client for local tooling convenience, and depending on
+  // what's installed where, `prisma generate` would sometimes write the
+  // schema-specific client into the repo root's node_modules instead of
+  // apps/web's, which Netlify's function bundler then failed to find at
+  // runtime ("Cannot find module '.prisma/client/default'") regardless of
+  // which node_modules path we told it to include. An explicit output path
+  // inside the app's own source tree removes that ambiguity entirely — this
+  // is Prisma's own recommended approach for monorepos.
+  output   = "../apps/web/src/generated/prisma"
 }
 
 datasource db {

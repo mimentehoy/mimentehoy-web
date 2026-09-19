@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@/generated/prisma";
 
 // Netlify's built-in Postgres integration injects NETLIFY_DB_URL
 // automatically at build and runtime (confirmed by reading
