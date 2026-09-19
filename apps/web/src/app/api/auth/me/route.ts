@@ -20,6 +20,13 @@ export async function GET(req: Request) {
     return NextResponse.json({ user: null }, { status: 200 });
   }
 
+  const subscriber = await prisma.newsletterSubscriber.findUnique({ where: { email: user.email } });
+  const newsletterStatus: "subscribed" | "unsubscribed" | "none" = !subscriber
+    ? "none"
+    : subscriber.unsubscribedAt
+      ? "unsubscribed"
+      : "subscribed";
+
   return NextResponse.json({
     user: {
       id: user.id,
@@ -27,6 +34,7 @@ export async function GET(req: Request) {
       email: user.email,
       role: user.role,
       interests: user.interests.map((entry) => entry.interest.slug),
+      newsletterStatus,
     },
   });
 }

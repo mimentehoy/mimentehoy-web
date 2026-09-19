@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getArticleBySlug, getArticles } from "@/lib/content";
+import { FavoriteButton } from "@/components/favorite-button";
 
 export async function generateStaticParams() {
   const articles = await getArticles();
@@ -46,6 +47,10 @@ export default async function ArticleDetailPage({
                 #{tag}
               </span>
             ))}
+          </div>
+
+          <div className="mt-6">
+            <FavoriteButton targetType="article" targetId={article.id} />
           </div>
 
           <div className="mt-8 space-y-6 text-[1.02rem] leading-8 text-stone-700">

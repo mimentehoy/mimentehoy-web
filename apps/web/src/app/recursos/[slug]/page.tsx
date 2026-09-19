@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getResourceBySlug, getResources } from "@/lib/content";
+import { FavoriteButton } from "@/components/favorite-button";
+import { TrackedDownloadLink } from "@/components/tracked-download-link";
 
 export async function generateStaticParams() {
   const resources = await getResources();
@@ -43,12 +45,13 @@ export default async function ResourceDetailPage({
           <p className="mt-4 text-base leading-7 text-stone-600">{resource.description}</p>
 
           <div className="mt-8 flex flex-wrap gap-3">
-            <a href={resource.downloadUrl} className="primary-button" target="_blank" rel="noreferrer">
+            <TrackedDownloadLink resourceId={resource.id} href={resource.downloadUrl}>
               Descargar recurso
-            </a>
+            </TrackedDownloadLink>
             <a href="https://mimentehoy.myshopify.com/products/kit-para-padres?utm_source=tiktok&utm_medium=social&utm_campaign=perfil" className="secondary-button" target="_blank" rel="noreferrer">
               Ver kit para padres
             </a>
+            <FavoriteButton targetType="resource" targetId={resource.id} />
           </div>
 
           <div className="mt-8 rounded-2xl border border-stone-200 bg-stone-50 p-5 text-sm leading-7 text-stone-700">

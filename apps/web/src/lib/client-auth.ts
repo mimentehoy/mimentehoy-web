@@ -8,6 +8,7 @@ export type CurrentUser = {
   email: string;
   role: "USER" | "ADMIN";
   interests: string[];
+  newsletterStatus: "subscribed" | "unsubscribed" | "none";
 };
 
 export const fetchCurrentUser = async (): Promise<CurrentUser | null> => {

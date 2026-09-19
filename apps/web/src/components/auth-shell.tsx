@@ -295,22 +295,113 @@ export function AccountPanel() {
           </div>
         </div>
 
-        {[
-          { title: "Mis recursos", description: "Recursos descargados y guardados" },
-          { title: "Mis descargas", description: "Archivos y plantillas disponibles" },
-          { title: "Mis favoritos", description: "Artículos y recursos guardados" },
-          { title: "Mis intereses", description: "Gestiona tus temas favoritos" },
-          { title: "Newsletter", description: "Estado de suscripción" },
-        ].map((card) => (
-          <div key={card.title} className="section-shell p-5">
-            <h2 className="text-xl font-semibold text-stone-900">{card.title}</h2>
-            <p className="mt-2 text-sm leading-6 text-stone-600">{card.description}</p>
-          </div>
-        ))}
-
+        <FavoritesCard />
+        <DownloadsCard />
+        <NewsletterCard status={user.newsletterStatus} />
         <ChangePasswordCard />
       </div>
     </main>
+  );
+}
+
+type FavoriteEntry = { targetType: string; targetId: string; title: string; slug: string; createdAt: string };
+
+function FavoritesCard() {
+  const [favorites, setFavorites] = useState<FavoriteEntry[] | null>(null);
+
+  useEffect(() => {
+    fetch("/api/favorites", { cache: "no-store" })
+      .then((res) => res.json())
+      .then((data) => setFavorites(Array.isArray(data.favorites) ? data.favorites : []))
+      .catch(() => setFavorites([]));
+  }, []);
+
+  return (
+    <div className="section-shell p-5">
+      <h2 className="text-xl font-semibold text-stone-900">Mis favoritos</h2>
+      <p className="mt-2 text-sm leading-6 text-stone-600">Artículos y recursos guardados</p>
+
+      {favorites === null && <p className="mt-3 text-sm text-stone-500">Cargando…</p>}
+      {favorites?.length === 0 && <p className="mt-3 text-sm text-stone-500">Todavía no has guardado nada.</p>}
+
+      <ul className="mt-3 space-y-2">
+        {favorites?.map((fav) => (
+          <li key={`${fav.targetType}-${fav.targetId}`}>
+            <Link
+              href={fav.targetType === "article" ? `/articulos/${fav.slug}` : `/recursos/${fav.slug}`}
+              className="text-sm font-medium text-[#0f7290] hover:underline"
+            >
+              {fav.title}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+type DownloadEntry = { resourceId: string; title: string; slug: string; createdAt: string };
+
+function DownloadsCard() {
+  const [downloads, setDownloads] = useState<DownloadEntry[] | null>(null);
+
+  useEffect(() => {
+    fetch("/api/downloads", { cache: "no-store" })
+      .then((res) => res.json())
+      .then((data) => setDownloads(Array.isArray(data.downloads) ? data.downloads : []))
+      .catch(() => setDownloads([]));
+  }, []);
+
+  return (
+    <div className="section-shell p-5">
+      <h2 className="text-xl font-semibold text-stone-900">Mis descargas</h2>
+      <p className="mt-2 text-sm leading-6 text-stone-600">Historial de recursos descargados</p>
+
+      {downloads === null && <p className="mt-3 text-sm text-stone-500">Cargando…</p>}
+      {downloads?.length === 0 && <p className="mt-3 text-sm text-stone-500">Todavía no has descargado nada.</p>}
+
+      <ul className="mt-3 space-y-2">
+        {downloads?.map((dl, index) => (
+          <li key={`${dl.resourceId}-${index}`}>
+            <Link href={`/recursos/${dl.slug}`} className="text-sm font-medium text-[#0f7290] hover:underline">
+              {dl.title}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function NewsletterCard({ status }: { status: CurrentUser["newsletterStatus"] }) {
+  return (
+    <div className="section-shell p-5">
+      <h2 className="text-xl font-semibold text-stone-900">Newsletter</h2>
+      {status === "subscribed" && (
+        <>
+          <p className="mt-2 text-sm leading-6 text-stone-600">Estás suscrito a la newsletter.</p>
+          <Link href="/newsletter/baja" className="mt-3 inline-block text-sm font-semibold text-[#7a4a35]">
+            Darme de baja →
+          </Link>
+        </>
+      )}
+      {status === "unsubscribed" && (
+        <>
+          <p className="mt-2 text-sm leading-6 text-stone-600">Te diste de baja de la newsletter.</p>
+          <Link href="/newsletter" className="mt-3 inline-block text-sm font-semibold text-[#7a4a35]">
+            Volver a suscribirme →
+          </Link>
+        </>
+      )}
+      {status === "none" && (
+        <>
+          <p className="mt-2 text-sm leading-6 text-stone-600">Todavía no estás suscrito.</p>
+          <Link href="/newsletter" className="mt-3 inline-block text-sm font-semibold text-[#7a4a35]">
+            Suscribirme →
+          </Link>
+        </>
+      )}
+    </div>
   );
 }
 
