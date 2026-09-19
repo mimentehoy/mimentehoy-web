@@ -1,0 +1,10 @@
+# Force binary handling regardless of core.autocrlf so Windows checkouts
+# never rewrite line endings inside these files.
+*.pdf binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.ico binary
+*.gif binary
+*.svg -text
