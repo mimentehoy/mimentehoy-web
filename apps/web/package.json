@@ -7,7 +7,8 @@
     "prebuild": "node ./copy-functions.js",
     "clean": "node ./clean-build.js",
     "db:generate": "prisma generate --schema ../../prisma/schema.prisma",
-    "build": "node ./clean-build.js && npm run db:generate && next build --webpack",
+    "db:push": "node ./scripts/db-push.js",
+    "build": "node ./clean-build.js && npm run db:generate && npm run db:push && next build --webpack",
     "start": "next start",
     "lint": "eslint",
     "postinstall": "prisma generate --schema ../../prisma/schema.prisma"
