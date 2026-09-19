@@ -68,16 +68,9 @@ export function NewsletterBox() {
         </div>
 
         <form
-          name="newsletter"
-          method="POST"
-          data-netlify="true"
-          data-netlify-honeypot="bot-field"
           onSubmit={handleSubmit}
           className="flex flex-col gap-3 sm:flex-row md:flex-col xl:flex-row"
         >
-          <input type="hidden" name="form-name" value="newsletter" />
-          <input aria-hidden name="bot-field" style={{ display: "none" }} />
-
           <input
             name="name"
             value={name}
