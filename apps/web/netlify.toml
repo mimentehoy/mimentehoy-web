@@ -15,4 +15,9 @@
   # generated client is loaded via a require() the tracer can't follow, so
   # without this every route touching Prisma throws "Cannot find module
   # '.prisma/client/default'" at runtime despite a clean build.
-  included_files = ["node_modules/.prisma/client/**"]
+  #
+  # Globs here resolve against the monorepo root (this plugin step runs with
+  # a different cwd than the `npm run build` command itself, which is why
+  # its own .env globs are prefixed with the app dir too) — apps/web/, not
+  # this file's own directory, even though netlify.toml lives inside it.
+  included_files = ["apps/web/node_modules/.prisma/client/**"]
