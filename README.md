@@ -4,9 +4,9 @@ MIMENTEHOY es una plataforma editorial y de comunidad orientada a contenidos sob
 
 ## Estado actual (actualizado 2026-09-19)
 
-- V1 en desarrollo local: home, artículos, recursos, herramienta de rutinas visuales, newsletter, tienda y panel admin básico, sobre un fallback JSON.
-- **Dominio `mimentehoy.com` ya comprado** en Hostinger (1 año, vence 2027-09-19 — verificar el email de contacto WHOIS si Hostinger lo pide).
-- **Sin plan de hosting contratado todavía.** Se verificó en vivo en hPanel que Hostinger compartido solo soporta Node.js + SSH desde el plan **Business**, y que solo ofrece **MySQL** (no PostgreSQL) — ver `docs/hostinger-deployment-checklist.md`.
+- **[https://mimentehoy.com](https://mimentehoy.com) está en vivo**, con HTTPS: home, artículos, recursos, herramienta de rutinas visuales, newsletter, tienda (Shopify Storefront API con fallback estático) y panel admin básico, sobre un fallback JSON.
+- Hosting real: **Netlify** (proyecto `mimentehoy-web`, deploy automático desde `main` en GitHub). Dominio comprado y DNS gestionado en **Hostinger** (`A`/`CNAME` apuntando a Netlify) — Hostinger todavía no aloja la app en sí.
+- **Sin plan de hosting de Hostinger contratado.** Se verificó en vivo en hPanel que Hostinger compartido solo soporta Node.js + SSH desde el plan **Business**, y que solo ofrece **MySQL** (no PostgreSQL) — ver `docs/hostinger-deployment-checklist.md`.
 
 ## Recomendación técnica (confirmada)
 
@@ -90,39 +90,17 @@ Con esa información, se podrá cerrar la arquitectura final y avanzar a la sigu
 
 ---
 
-## Deploy en Netlify y configuración de MailerLite (rápido)
+## Deploy en Netlify (estado real, actualizado 2026-09-19)
 
-Pasos que se han automatizado en el repositorio y cómo usarlo:
+El sitio ya está conectado, desplegado y en dominio propio. Así queda montado:
 
-1) Conectar el repositorio GitHub a Netlify y crear un sitio usando la carpeta `apps/web` como "Base directory" (si Netlify te pide un subdirectorio). Opciones de build:
-   - Build command: `npm run build`
-   - Publish directory: `out`
-   - Node version: 20 (ya configurado en `netlify.toml`)
+- **Proyecto Netlify**: `mimentehoy-web`, conectado a `github.com/mimentehoy/mimentehoy-web`, deploy automático en cada push a `main`.
+- **Build**: `apps/web` como base directory, `npm run build` (fuerza `next build --webpack`; Turbopack no es compatible todavía con `@netlify/plugin-nextjs`). El runtime de Next.js lo gestiona el plugin `@netlify/plugin-nextjs`, declarado en `apps/web/package.json` y `apps/web/netlify.toml` — **no** se usa `publish = "out"` (eso era de una exportación estática antigua; la app ya tiene rutas API reales y no puede exportarse como estático).
+- **Dominio**: `mimentehoy.com` comprado en Hostinger, DNS también en Hostinger apuntando a Netlify:
+  - `A @ → 75.2.60.5`
+  - `CNAME www → mimentehoy-web.netlify.app`
+  - Certificado HTTPS (Let's Encrypt) emitido automáticamente por Netlify.
+- **Newsletter**: `src/app/api/newsletter/route.ts` reenvía a MailerLite directamente vía su API (variable `MAILERLITE_API_KEY` en Netlify → Environment variables) o guarda en un JSON local de fallback si no está configurada. La función independiente `netlify/functions/mailerLiteSubscribe.js` (generada desde `src/mailerLiteSubscribeFunction.js` por `copy-functions.js`) es un resto de una versión anterior — ya no la llama nada del frontend, sigue construyéndose por compatibilidad pero puede limpiarse en el futuro.
+- **Variables de entorno configuradas en Netlify hoy**: solo `MAILERLITE_API_KEY`. Ni `DATABASE_URL`, ni las de Shopify, ni las de `ADMIN_*` están puestas todavía — ver `.env.example` para la lista completa y qué activa cada una.
 
-2) El repositorio incluye una Netlify Function preparada para reenviar suscriptores a MailerLite. Antes de ejecutar el primer deploy, añade en Netlify (Site → Settings → Build & deploy → Environment)
-   la variable de entorno:
-   - `MAILERLITE_API_KEY` = tu_clave_de_mailerlite
-
-   Nota: la clave no debe almacenarse en el repositorio. También puedes usar `MAILERLITE_TOKEN` si tu clave usa ese nombre.
-
-3) En el build se ejecuta un paso previo (`prebuild`) que copia la función desde `src/mailerLiteSubscribeFunction.js` a `netlify/functions/mailerLiteSubscribe.js`. Netlify construirá y desplegará la función automáticamente.
-
-4) El formulario de newsletter en la web realiza dos acciones al enviar:
-   - POST a `/` (mantiene la compatibilidad con Netlify Forms si quieres activarlo)
-   - POST a `/.netlify/functions/mailerLiteSubscribe` para que MailerLite reciba el suscriptor inmediatamente.
-
-5) Para probar:
-   - Despliega a Netlify.
-   - Envía una suscripción de prueba desde la página (usa una dirección de email de prueba).
-   - Comprueba en Netlify (Site → Functions) que `mailerLiteSubscribe` existe y en Netlify Logs que se ejecutó.
-   - Comprueba en MailerLite si aparece el nuevo suscriptor.
-
-6) Alternativa/backup: si no quieres usar MailerLite todavía, deja `MAILERLITE_API_KEY` vacío: el formulario seguirá funcionando como Netlify Form (si activas Forms en Netlify) y el comportamiento no se romperá.
-
----
-
-Si quieres, continuo y:
-- Conecto el repo a Netlify por ti (necesitarás autorizar la conexión OAuth en Netlify/GitHub), o
-- Te doy los pasos exactos con capturas para que lo conectes tú y lo probemos.
-
-Dime cuál prefieres.
+Para desplegar cambios: `git push origin main` y Netlify reconstruye solo.

@@ -12,9 +12,10 @@ La V1 no debe volverse un “gran portal” con demasiadas funciones. Debe ser u
 
 ## 2. Estado de auditoría actual (actualizado 2026-09-19)
 
-- El proyecto ya tiene V1 en desarrollo: home, artículos, recursos, herramienta de rutinas, newsletter, tienda y panel admin básico funcionando en local sobre un fallback JSON (ver `docs/architecture-overview.md`).
-- **Dominio `mimentehoy.com` comprado** en la cuenta de Hostinger del usuario (término 1 año, vence 2027-09-19). Estado al comprarlo: "Verificación pendiente" — hay que confirmar el email de contacto WHOIS (requisito de ICANN) o el registrador puede suspenderlo.
-- La cuenta de Hostinger también tiene `iant.es` (dominio + email, sin relación con MIMENTEHOY) pero **no tiene ningún plan de hosting contratado todavía**.
+- El proyecto ya tiene V1 en desarrollo: home, artículos, recursos, herramienta de rutinas, newsletter, tienda y panel admin básico, desplegados y en vivo (ver Fase 15 más abajo).
+- **`https://mimentehoy.com` está en producción, en vivo, con HTTPS**: dominio comprado en Hostinger (1 año, vence 2027-09-19; confirma el email de contacto WHOIS si Hostinger lo pide), DNS de Hostinger apuntando a Netlify (`A @ → 75.2.60.5`, `CNAME www → mimentehoy-web.netlify.app`), certificado Let's Encrypt emitido automáticamente por Netlify. `www.mimentehoy.com` redirige al apex.
+- El hosting real de la app es **Netlify** (`mimentehoy-web`, Next.js Runtime vía `@netlify/plugin-nextjs`), no Hostinger todavía — Hostinger de momento solo aporta el registro del dominio y su DNS.
+- La cuenta de Hostinger también tiene `iant.es` (dominio + email, sin relación con MIMENTEHOY) pero **no tiene ningún plan de hosting contratado**.
 - Se verificó en vivo el panel de Hostinger (hPanel) — ver sección 3, ya resuelta.
 
 ## 3. Requisitos de Hostinger — RESUELTO (verificado en hPanel el 2026-09-19)
