@@ -59,6 +59,13 @@ export const featuredArticles = [
 
 export const resources = [
   {
+    title: "Guía gratuita para empezar con calma",
+    category: "Crianza",
+    type: "PDF",
+    label: "Gratis",
+    description: "Una guía práctica para entender señales, poner límites y crear ritmos más suaves en casa.",
+  },
+  {
     title: "Checklist de inicio de semana",
     category: "Rutinas",
     type: "PDF",
@@ -71,13 +78,6 @@ export const resources = [
     type: "Imprimible",
     label: "Premium",
     description: "Pequeños cambios para apoyar la transición a la noche.",
-  },
-  {
-    title: "Tarjetas de emociones",
-    category: "Emociones",
-    type: "Visual",
-    label: "Gratis",
-    description: "Un recurso práctico para nombrar y regular estados emocionales.",
   },
 ];
 
@@ -96,19 +96,22 @@ export const toolHighlights = [
 
 export const productCards = [
   {
-    title: "Guía práctica para padres de niños con TDAH",
-    price: "25 €",
-    tag: "Digital",
-  },
-  {
-    title: "Kit de láminas imprimibles",
-    price: "18 €",
+    title: "Kit para padres",
+    slug: "kit-para-padres",
+    price: "39 €",
     tag: "Pack",
   },
   {
-    title: "Rutinas visuales de la semana",
-    price: "14 €",
-    tag: "Printable",
+    title: "No es que no quiera",
+    slug: "no-es-que-no-quiera",
+    price: "18 €",
+    tag: "Libro",
+  },
+  {
+    title: "Guía gratuita para empezar con calma",
+    slug: "guia-gratuita-para-empezar-con-calma",
+    price: "Gratis",
+    tag: "Recursos",
   },
 ];
 

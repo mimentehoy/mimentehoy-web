@@ -1,16 +1,19 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f7f1eb;
-  --foreground: #201913;
-  --surface: #fffdfb;
-  --muted: #efe3d7;
-  --accent: #c46f48;
-  --accent-strong: #8f4b32;
-  --sage: #7b9b7a;
-  --ink: #2b241f;
-  --card: rgba(255, 255, 255, 0.78);
-  --shadow-color: rgba(32, 25, 19, 0.09);
+  --background: #ffffff;
+  --foreground: #001733;
+  --surface: #f7fafb;
+  --muted: #eef5f6;
+  --accent: #009bb0;
+  --accent-strong: #001733;
+  --sage: #17aba3;
+  --ink: #001733;
+  --card: rgba(255, 255, 255, 0.92);
+  --shadow-color: rgba(0, 27, 51, 0.08);
+  --brand-warm: #f6a114;
+  --brand-orange: #fd9b10;
+  --brand-pink: #ed4a6f;
 }
 
 @theme inline {
@@ -32,7 +35,7 @@ html {
 
 body {
   background:
-    radial-gradient(circle at top, rgba(196, 111, 72, 0.12), transparent 35%),
+    radial-gradient(circle at top, rgba(0, 155, 176, 0.12), transparent 35%),
     var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
@@ -63,21 +66,28 @@ p {
 }
 
 .section-shell {
-  @apply rounded-[26px] border border-stone-200/80 bg-white/80 shadow-[0_18px_48px_rgba(32,25,19,0.06)] backdrop-blur-sm;
+  @apply rounded-[26px] border border-[#dfeaf0] bg-white/90 shadow-[0_18px_48px_rgba(0,27,51,0.06)] backdrop-blur-sm;
 }
 
 .soft-label {
-  @apply inline-flex items-center rounded-full border border-stone-200 bg-stone-100 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-stone-600;
+  @apply inline-flex items-center rounded-full border border-[#dfeaf0] bg-[#f7fafb] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-[#334155];
 }
 
 .primary-button {
-  @apply inline-flex items-center justify-center rounded-full bg-[#201913] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#483a31];
+  @apply inline-flex items-center justify-center rounded-full bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#008aa0];
 }
 
 .secondary-button {
-  @apply inline-flex items-center justify-center rounded-full border border-stone-300 bg-white/80 px-5 py-3 text-sm font-semibold text-stone-800 transition hover:border-stone-400 hover:bg-white;
+  @apply inline-flex items-center justify-center rounded-full border border-[#cfe0e6] bg-white/90 px-5 py-3 text-sm font-semibold text-[#001733] transition hover:border-[#b9d6dd] hover:bg-white;
 }
 
 .link-pill {
-  @apply inline-flex items-center rounded-full border border-stone-200 bg-stone-50 px-3 py-1.5 text-sm font-medium text-stone-700 transition hover:border-stone-300 hover:bg-stone-100;
+  @apply inline-flex items-center rounded-full border border-[#dfeaf0] bg-[#f7fafb] px-3 py-1.5 text-sm font-medium text-[#001733] transition hover:border-[#cfe0e6] hover:bg-white;
+}
+
+.gradient-text {
+  background: linear-gradient(90deg, #009bb0 0%, #17aba3 25%, #f6a114 50%, #fd9b10 75%, #ed4a6f 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
