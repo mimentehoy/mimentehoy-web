@@ -7,3 +7,12 @@
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+[functions]
+  # @netlify/plugin-nextjs reads this directly (its own packaging step, not
+  # Next's outputFileTracingIncludes) to decide what else to bundle into the
+  # server function beyond what its file tracer finds on its own. Prisma's
+  # generated client is loaded via a require() the tracer can't follow, so
+  # without this every route touching Prisma throws "Cannot find module
+  # '.prisma/client/default'" at runtime despite a clean build.
+  included_files = ["node_modules/.prisma/client/**"]
