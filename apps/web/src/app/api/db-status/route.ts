@@ -10,7 +10,7 @@ export async function GET() {
       {
         ok: false,
         database: "not-configured",
-        message: "DATABASE_URL no está definida (ni DATABASE_URL ni NETLIFY_DATABASE_URL).",
+        message: "DATABASE_URL no está definida (ni DATABASE_URL ni NETLIFY_DB_URL).",
       },
       { status: 503 },
     );
