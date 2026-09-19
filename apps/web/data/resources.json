@@ -1,0 +1,50 @@
+[
+  {
+    "id": "guia-gratuita-para-empezar-con-calma",
+    "title": "Guía gratuita para empezar con calma",
+    "slug": "guia-gratuita-para-empezar-con-calma",
+    "category": "Crianza",
+    "type": "PDF",
+    "label": "Gratis",
+    "description": "Una guía práctica para crear un ritmo más tranquilo, claro y amable en casa.",
+    "status": "publicado",
+    "downloadUrl": "/downloads/guia-gratuita-para-empezar-con-calma.pdf",
+    "featured": true
+  },
+  {
+    "id": "checklist-inicio-semana",
+    "title": "Checklist de inicio de semana",
+    "slug": "checklist-inicio-semana",
+    "category": "Rutinas",
+    "type": "PDF",
+    "label": "Gratis",
+    "description": "Un recordatorio visual para empezar la semana con menos ruido y más claridad.",
+    "status": "publicado",
+    "downloadUrl": "/downloads/checklist-inicio-semana.pdf",
+    "featured": true
+  },
+  {
+    "id": "mini-guia-sueno",
+    "title": "Mini guía de sueño",
+    "slug": "mini-guia-sueno",
+    "category": "Sueño",
+    "type": "Imprimible",
+    "label": "Premium",
+    "description": "Pequeños cambios para apoyar la transición a la noche.",
+    "status": "publicado",
+    "downloadUrl": "/downloads/mini-guia-sueno.pdf",
+    "featured": true
+  },
+  {
+    "id": "tarjetas-de-emociones",
+    "title": "Tarjetas de emociones",
+    "slug": "tarjetas-de-emociones",
+    "category": "Emociones",
+    "type": "Visual",
+    "label": "Gratis",
+    "description": "Un recurso práctico para nombrar y regular estados emocionales.",
+    "status": "publicado",
+    "downloadUrl": "/downloads/tarjetas-de-emociones.pdf",
+    "featured": true
+  }
+]
