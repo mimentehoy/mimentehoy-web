@@ -6,13 +6,13 @@
     "dev": "next dev",
     "prebuild": "node ./copy-functions.js",
     "clean": "node ./clean-build.js",
-    "db:generate": "prisma generate --schema ../../prisma/schema.prisma",
+    "db:generate": "node ./scripts/db-generate.js",
     "db:push": "node ./scripts/db-push.js",
     "db:seed": "node ./scripts/db-seed.js",
     "build": "node ./clean-build.js && npm run db:generate && npm run db:push && npm run db:seed && next build --webpack",
     "start": "next start",
     "lint": "eslint",
-    "postinstall": "prisma generate --schema ../../prisma/schema.prisma"
+    "postinstall": "node ./scripts/db-generate.js"
   },
   "dependencies": {
     "@netlify/database": "^2.0.1",
