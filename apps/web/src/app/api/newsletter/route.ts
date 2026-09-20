@@ -32,7 +32,7 @@ const forwardToMailerLite = async (email: string, name: string, consent: boolean
   const groupId = process.env.MAILERLITE_GROUP_ID || process.env.MAILERLITE_LIST_ID;
 
   try {
-    await fetch("https://connect.mailerlite.com/api/subscribers", {
+    const res = await fetch("https://connect.mailerlite.com/api/subscribers", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -46,6 +46,11 @@ const forwardToMailerLite = async (email: string, name: string, consent: boolean
         status: consent ? "active" : "unconfirmed",
       }),
     });
+
+    if (!res.ok) {
+      const body = await res.text().catch(() => "");
+      console.error(`MailerLite forward returned ${res.status} (non-blocking):`, body);
+    }
   } catch (error) {
     console.error("MailerLite forward failed (non-blocking):", error);
   }
