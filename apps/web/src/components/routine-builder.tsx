@@ -96,8 +96,11 @@ export function RoutineBuilder() {
     window.print();
   };
 
+  const badgeColors = ["#e3a83f", "#1f6f5c", "#d6552e"];
+
   return (
-    <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
+    <>
+    <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr] print:hidden">
       <div className="section-shell p-5 sm:p-6">
         <div className="mb-4 flex items-center justify-between">
           <span className="soft-label">Editor</span>
@@ -204,5 +207,59 @@ export function RoutineBuilder() {
         </div>
       </div>
     </div>
+
+    <div className="hidden print:relative print:left-1/2 print:block print:w-[100vw] print:max-w-none print:-translate-x-1/2 print:bg-[#f7ecdc] print:p-12">
+      <div className="flex items-center gap-3">
+        <img src="/logo.png" alt="mi mente hoy" className="h-9 w-9 rounded-full object-cover" />
+        <span className="text-sm font-bold tracking-tight text-stone-800">mi mente hoy</span>
+      </div>
+
+      <h1 className="mt-10 text-5xl font-extrabold leading-tight tracking-tight">
+        <span style={{ color: "#1f6f5c" }}>{title || "Mi rutina visual"}</span>
+        <br />
+        <span style={{ color: "#d6552e" }}>EN {totalSteps} PASOS</span>
+      </h1>
+      <div className="mt-3 h-1 w-24 rounded-full" style={{ backgroundColor: "#e3a83f" }} />
+
+      <p className="mt-4 text-lg text-stone-600">Una cosa cada vez. Sin prisa.</p>
+
+      <div className="mt-6 flex items-center gap-3 text-base text-stone-600">
+        <span>Rutina de</span>
+        <span className="flex-1 border-b border-dashed border-stone-400" />
+      </div>
+
+      <div className="mt-10 grid grid-cols-2 gap-x-8 gap-y-10">
+        {tasks.map((task, index) => (
+          <div key={task.id} className="relative rounded-[24px] border border-stone-300 bg-white p-6">
+            <div
+              className="absolute -left-4 -top-4 flex h-10 w-10 items-center justify-center rounded-full text-lg font-bold text-white shadow"
+              style={{ backgroundColor: badgeColors[index % badgeColors.length] }}
+            >
+              {index + 1}
+            </div>
+            <div className="flex items-start gap-4">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#f4e1d6] text-2xl">
+                {task.icon}
+              </div>
+              <div className="flex-1">
+                <div className="text-lg font-bold text-stone-900">{task.label || "Nueva tarea"}</div>
+              </div>
+              <div className="mt-1 h-6 w-6 shrink-0 rounded-md border-2 border-stone-400" />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-12 flex items-center justify-between">
+        <span
+          className="inline-flex items-center rounded-full px-5 py-2 text-sm font-semibold text-white"
+          style={{ backgroundColor: "#1f6f5c" }}
+        >
+          {totalSteps} de {totalSteps} · ¡rutina lista!
+        </span>
+        <span className="text-sm text-stone-500">mimentehoy.com</span>
+      </div>
+    </div>
+    </>
   );
 }

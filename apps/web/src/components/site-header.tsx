@@ -3,7 +3,7 @@ import { navItems } from "@/data/site";
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-40 border-b border-[#dfeaf0] bg-white/90 backdrop-blur-md">
+    <header className="sticky top-0 z-40 border-b border-[#dfeaf0] bg-white/90 backdrop-blur-md print:hidden">
       <div className="container-shell flex h-20 items-center justify-between gap-4">
         <Link href="/" className="flex items-center gap-3" aria-label="MIMENTEHOY home">
           <img src="/logo.png" alt="MIMENTEHOY" className="h-10 w-10 rounded-lg object-cover" />
