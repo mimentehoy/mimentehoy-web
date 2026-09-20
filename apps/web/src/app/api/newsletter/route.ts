@@ -15,23 +15,35 @@ const resolveDataFile = () => {
   return path.join(dataDir, "newsletter-subscribers.json");
 };
 
-/** Best-effort MailerLite forward — never blocks or fails the subscription itself, since our own database is the source of truth (see lib/db write below). */
-const forwardToMailerLite = async (email: string, name: string, interests: string[], consent: boolean) => {
+/**
+ * Best-effort MailerLite forward — never blocks or fails the subscription itself, since our own
+ * database is the source of truth (see lib/db write below).
+ *
+ * Uses MailerLite's current Connect API (v3, api.mailerlite.com/api/subscribers). The old v2 API
+ * this used to call (api.mailerlite.com/api/v2/groups/...) was retired by MailerLite years ago,
+ * so every "forward" was silently failing regardless of whether a group ID was configured.
+ * MAILERLITE_GROUP_ID is optional here — without it, subscribers still land in the MailerLite
+ * account (just ungrouped), which is enough to build and send a campaign to "all subscribers".
+ */
+const forwardToMailerLite = async (email: string, name: string, consent: boolean) => {
   const apiKey = process.env.MAILERLITE_API_KEY || process.env.MAILERLITE_KEY;
+  if (!apiKey) return;
+
   const groupId = process.env.MAILERLITE_GROUP_ID || process.env.MAILERLITE_LIST_ID;
-  if (!apiKey || !groupId) return;
 
   try {
-    await fetch(`https://api.mailerlite.com/api/v2/groups/${groupId}/subscribers`, {
+    await fetch("https://connect.mailerlite.com/api/subscribers", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-MailerLite-ApiKey": apiKey,
+        Accept: "application/json",
+        Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
         email,
-        name,
-        fields: { interests: interests.join(", "), consent: consent ? "yes" : "no" },
+        fields: { name },
+        ...(groupId ? { groups: [groupId] } : {}),
+        status: consent ? "active" : "unconfirmed",
       }),
     });
   } catch (error) {
@@ -62,13 +74,13 @@ export async function POST(req: Request) {
         update: { name: name || undefined, interests, consent, unsubscribedAt: null },
       });
 
-      await forwardToMailerLite(email, name, interests, consent);
+      await forwardToMailerLite(email, name, consent);
 
       return NextResponse.json({ ok: true, message: "Suscrito correctamente." });
     }
 
     // No database configured (local dev) — JSON fallback, matching the rest of the app's pattern.
-    await forwardToMailerLite(email, name, interests, consent);
+    await forwardToMailerLite(email, name, consent);
 
     const filePath = resolveDataFile();
     let items: Array<Record<string, unknown>> = [];

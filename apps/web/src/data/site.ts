@@ -1,8 +1,5 @@
 export const navItems = [
   { label: "Inicio", href: "/" },
-  { label: "Artículos", href: "/articulos" },
-  { label: "Recursos", href: "/recursos" },
-  { label: "Herramientas", href: "/herramientas" },
   { label: "Newsletter", href: "/newsletter" },
   { label: "Tienda", href: "/tienda" },
 ];
@@ -98,20 +95,16 @@ export const productCards = [
   {
     title: "Kit para padres",
     slug: "kit-para-padres",
-    price: "39 €",
+    price: "2,99 €",
     tag: "Pack",
+    image: "/images/products/kit-para-padres.png",
   },
   {
     title: "No es que no quiera",
     slug: "no-es-que-no-quiera",
-    price: "18 €",
+    price: "9,90 €",
     tag: "Libro",
-  },
-  {
-    title: "Guía gratuita para empezar con calma",
-    slug: "guia-gratuita-para-empezar-con-calma",
-    price: "Gratis",
-    tag: "Recursos",
+    image: "/images/products/no-es-que-no-quiera.png",
   },
 ];
 

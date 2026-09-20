@@ -22,7 +22,7 @@ export default async function TiendaPage() {
           description: product.description,
           image: product.image,
         }))
-      : productCards.map((product) => ({ ...product, description: null, image: null }));
+      : productCards.map((product) => ({ ...product, description: null }));
 
   return (
     <main className="container-shell py-10 sm:py-14">
@@ -36,8 +36,8 @@ export default async function TiendaPage() {
         {products.map((product) => (
           <article key={product.slug} className="section-shell p-5">
             {product.image && (
-              <div className="relative mb-4 aspect-[4/3] overflow-hidden rounded-2xl bg-stone-100">
-                <Image src={product.image} alt={product.title} fill className="object-cover" sizes="(min-width: 768px) 33vw, 100vw" />
+              <div className="relative mb-4 aspect-[3/4] overflow-hidden rounded-2xl bg-stone-100">
+                <Image src={product.image} alt={product.title} fill className="object-contain" sizes="(min-width: 768px) 33vw, 100vw" />
               </div>
             )}
             <div className="mb-4 flex items-center justify-between">

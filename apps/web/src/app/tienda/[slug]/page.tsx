@@ -41,11 +41,9 @@ export default async function ProductDetailPage({
         price: staticProduct!.price,
         description:
           "Un recurso pensado para acompañar la vida real de familias, educadores y personas que quieren más claridad, previsibilidad y herramientas útiles.",
-        image: null as string | null,
+        image: staticProduct!.image as string | null,
         checkoutUrl: getShopifyProductUrl(staticProduct!.slug),
       };
-
-  const isFreeResource = product.price === "Gratis" || slug === "guia-gratuita-para-empezar-con-calma";
 
   return (
     <main className="container-shell py-10 sm:py-14">
@@ -56,8 +54,8 @@ export default async function ProductDetailPage({
 
         <div className="mt-6 section-shell p-6 sm:p-8">
           {product.image && (
-            <div className="relative mb-6 aspect-[16/9] overflow-hidden rounded-2xl bg-stone-100">
-              <Image src={product.image} alt={product.title} fill className="object-cover" sizes="(min-width: 768px) 768px, 100vw" />
+            <div className="relative mb-6 h-96 overflow-hidden rounded-2xl bg-stone-100">
+              <Image src={product.image} alt={product.title} fill className="object-contain" sizes="(min-width: 768px) 768px, 100vw" />
             </div>
           )}
 
@@ -71,15 +69,9 @@ export default async function ProductDetailPage({
           <p className="mt-4 text-base leading-7 text-stone-600">{product.description}</p>
 
           <div className="mt-8 flex flex-wrap gap-3">
-            {isFreeResource ? (
-              <Link href="/recursos/guia-gratuita-para-empezar-con-calma" className="primary-button">
-                Ver recurso gratis
-              </Link>
-            ) : (
-              <a href={product.checkoutUrl} className="primary-button" target="_blank" rel="noreferrer">
-                Comprar en Shopify
-              </a>
-            )}
+            <a href={product.checkoutUrl} className="primary-button" target="_blank" rel="noreferrer">
+              Comprar en Shopify
+            </a>
             <Link href="/newsletter" className="secondary-button">
               Recibir más recursos
             </Link>

@@ -1,22 +1,11 @@
 "use client";
 import { useState } from "react";
-import { categories } from "@/data/site";
 
 export function NewsletterBox() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [consent, setConsent] = useState(false);
-  const [interests, setInterests] = useState<string[]>([]);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-
-  const toggleInterest = (value: string) => {
-    setInterests((prev) => (prev.includes(value) ? prev.filter((i) => i !== value) : [...prev, value]));
-  };
-
-  const encode = (data: Record<string, any>) =>
-    Object.keys(data)
-      .map((key) => encodeURIComponent(key) + "=" + encodeURIComponent(data[key]))
-      .join("&");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,7 +22,7 @@ export function NewsletterBox() {
         body: JSON.stringify({
           email,
           name,
-          interests,
+          interests: [],
           consent,
         }),
       });
@@ -44,7 +33,6 @@ export function NewsletterBox() {
         setStatus("success");
         setEmail("");
         setName("");
-        setInterests([]);
         setConsent(false);
       } else {
         setStatus("error");
@@ -97,24 +85,6 @@ export function NewsletterBox() {
             <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} required />
             Acepto recibir la newsletter y doy mi consentimiento (RGPD).
           </label>
-        </div>
-
-        <div className="mt-4 text-center text-sm text-stone-600">
-          <div className="mb-2 text-xs font-semibold text-stone-700">Me interesan:</div>
-          <div className="flex flex-wrap justify-center gap-2">
-            {categories.map((cat) => (
-              <label key={cat} className="inline-flex items-center gap-2 rounded-full border border-stone-200 bg-stone-50 px-3 py-1 text-xs">
-                <input
-                  type="checkbox"
-                  name="interests"
-                  value={cat}
-                  checked={interests.includes(cat)}
-                  onChange={() => toggleInterest(cat)}
-                />
-                <span>{cat}</span>
-              </label>
-            ))}
-          </div>
         </div>
 
         {status === "success" && <div className="mt-3 text-center text-sm font-semibold text-green-700">¡Gracias! Revisa tu bandeja de entrada.</div>}
