@@ -1,4 +1,7 @@
+import Link from "next/link";
 import { NewsletterBox } from "@/components/newsletter-box";
+import { ProductCard } from "@/components/product-card";
+import { productCards } from "@/data/site";
 
 export default function Home() {
   return (
@@ -13,11 +16,44 @@ export default function Home() {
             <p className="mt-5 max-w-xl text-base leading-7 text-stone-600 sm:text-lg">
               Artículos, recursos prácticos y herramientas útiles para familias, crianza, TDAH, autismo y salud mental.
             </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link href="/tienda" className="primary-button">
+                Ver libros y kits
+              </Link>
+              <a href="#newsletter" className="secondary-button">
+                Recursos gratis por email
+              </a>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="container-shell mt-10">
+      <section className="container-shell mt-10" aria-labelledby="tienda-home">
+        <div className="mb-5 flex items-end justify-between gap-4">
+          <div>
+            <span className="soft-label">Tienda</span>
+            <h2 id="tienda-home" className="mt-3 text-2xl font-semibold tracking-tight text-stone-900 sm:text-3xl">
+              Libros y kits para familias
+            </h2>
+            <p className="mt-1 text-sm text-stone-600">Autismo y TDAH. Descarga inmediata tras la compra.</p>
+          </div>
+          <Link href="/tienda" className="hidden shrink-0 text-sm font-semibold text-[#0f7290] sm:inline-flex">
+            Ver toda la tienda →
+          </Link>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {productCards.map((product) => (
+            <ProductCard key={product.slug} product={product} compact />
+          ))}
+        </div>
+        <div className="mt-5 sm:hidden">
+          <Link href="/tienda" className="secondary-button w-full">
+            Ver toda la tienda →
+          </Link>
+        </div>
+      </section>
+
+      <section id="newsletter" className="container-shell mt-14 scroll-mt-32">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-2xl font-semibold tracking-tight text-stone-900">
             ¿Quieres recibir guías, herramientas y recursos prácticos?
