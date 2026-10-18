@@ -1,59 +1,71 @@
-import Link from "next/link";
-import Image from "next/image";
 import { SectionHeading } from "@/components/section-heading";
-import { productCards } from "@/data/site";
-import { getShopifyProducts } from "@/lib/shopify";
+import { ProductCard } from "@/components/product-card";
+import { productCards, shopifyStoreUrl } from "@/data/site";
 
-export const revalidate = 300;
+export const metadata = {
+  title: "Tienda | MIMENTEHOY",
+  description:
+    "Libros y kits imprimibles de MIMENTEHOY para familias: autismo y TDAH. Descarga inmediata tras la compra.",
+};
 
-export default async function TiendaPage() {
-  const shopifyProducts = await getShopifyProducts();
+const topics = [
+  {
+    id: "autismo",
+    name: "Autismo",
+    intro: "Para entender y acompañar a tu hijo autista en el día a día.",
+  },
+  {
+    id: "tdah",
+    name: "TDAH",
+    intro: "Para entender a tu hijo con TDAH y saber qué hacer en casa y en el colegio.",
+  },
+] as const;
 
-  // Falls back to the static placeholder list until SHOPIFY_STORE_DOMAIN +
-  // SHOPIFY_STOREFRONT_ACCESS_TOKEN are set — same pattern as the rest of
-  // the app's optional integrations.
-  const products =
-    shopifyProducts && shopifyProducts.length > 0
-      ? shopifyProducts.map((product) => ({
-          title: product.title,
-          slug: product.handle,
-          price: Number(product.price) === 0 ? "Gratis" : `${product.price} ${product.currency}`,
-          tag: product.tag,
-          description: product.description,
-          image: product.image,
-        }))
-      : productCards.map((product) => ({ ...product, description: null }));
-
+export default function TiendaPage() {
   return (
-    <main className="container-shell py-10 sm:py-14">
+    <main className="container-shell py-8 sm:py-14">
       <SectionHeading
         eyebrow="Tienda"
-        title="Productos MIMENTEHOY"
-        description="La tienda se integra visualmente con la marca y redirige al checkout de Shopify."
+        title="Libros y kits MIMENTEHOY"
+        description="Guías prácticas y plantillas imprimibles para familias. Pago seguro en Shopify y descarga inmediata tras la compra."
       />
 
-      <div className="grid gap-5 md:grid-cols-3">
-        {products.map((product) => (
-          <article key={product.slug} className="section-shell p-5">
-            {product.image && (
-              <div className="relative mb-4 aspect-[3/4] overflow-hidden rounded-2xl bg-stone-100">
-                <Image src={product.image} alt={product.title} fill className="object-contain" sizes="(min-width: 768px) 33vw, 100vw" />
-              </div>
-            )}
-            <div className="mb-4 flex items-center justify-between">
-              <span className="soft-label">{product.tag}</span>
-              <span className="text-sm font-semibold text-stone-800">{product.price}</span>
-            </div>
-            <h2 className="text-2xl font-semibold text-stone-900">{product.title}</h2>
-            <p className="mt-3 text-sm leading-6 text-stone-600">
-              {product.description ||
-                "Producto diseñado para apoyar familias, rutinas, educación y neurodivergencia con soluciones concretas."}
-            </p>
-            <Link href={`/tienda/${product.slug}`} className="mt-5 inline-flex text-sm font-semibold text-[#7a4a35]">
-              Ver producto →
-            </Link>
-          </article>
+      <nav className="mb-8 flex flex-wrap gap-2" aria-label="Categorías de la tienda">
+        {topics.map((topic) => (
+          <a key={topic.id} href={`#${topic.id}`} className="link-pill">
+            {topic.name}
+          </a>
         ))}
+      </nav>
+
+      <div className="space-y-12">
+        {topics.map((topic) => {
+          const items = productCards.filter((product) => product.topic === topic.name);
+          if (items.length === 0) return null;
+          return (
+            <section key={topic.id} id={topic.id} className="scroll-mt-28">
+              <div className="mb-4">
+                <h2 className="text-xl font-semibold tracking-tight text-stone-900 sm:text-2xl">{topic.name}</h2>
+                <p className="mt-1 text-sm text-stone-600">{topic.intro}</p>
+              </div>
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {items.map((product) => (
+                  <ProductCard key={product.slug} product={product} />
+                ))}
+              </div>
+            </section>
+          );
+        })}
+      </div>
+
+      <div className="mt-12 section-shell flex flex-col items-start gap-4 p-6 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 className="text-lg font-semibold text-stone-900">¿Prefieres ver la tienda completa?</h2>
+          <p className="mt-1 text-sm text-stone-600">Todos los productos y el carrito están en nuestra tienda de Shopify.</p>
+        </div>
+        <a href={shopifyStoreUrl} target="_blank" rel="noreferrer" className="primary-button">
+          Ir a la tienda Shopify
+        </a>
       </div>
     </main>
   );
