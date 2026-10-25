@@ -44,7 +44,7 @@ export const getNews = cache((): NewsArticle[] => {
     }
     const reading = String(data.tiempo_lectura);
     return { titulo: data.titulo, slug: data.slug, fecha, descripcion: data.descripcion, categoria: data.categoria,
-      etiquetas: data.etiquetas, tiempo_lectura: /^\d+$/.test(reading) ? `${reading} min` : reading, imagen, contenido: content.trim() };
+      etiquetas: data.etiquetas, tiempo_lectura: /^\d+$/.test(reading) ? `${reading} min` : reading, imagen, contenido: content.trim().replace(/^#\s+.+\n+/, "") };
   }).sort((a, b) => b.fecha.localeCompare(a.fecha) || a.slug.localeCompare(b.slug));
 });
 export function getRelatedNews(article: NewsArticle) {
