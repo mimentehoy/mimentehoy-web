@@ -1,17 +1,5 @@
 [
   {
-    "id": "guia-gratuita-para-empezar-con-calma",
-    "title": "Guía gratuita para empezar con calma",
-    "slug": "guia-gratuita-para-empezar-con-calma",
-    "category": "Crianza",
-    "type": "PDF",
-    "label": "Gratis",
-    "description": "Una guía práctica para crear un ritmo más tranquilo, claro y amable en casa.",
-    "status": "publicado",
-    "downloadUrl": "/downloads/guia-gratuita-para-empezar-con-calma.pdf",
-    "featured": true
-  },
-  {
     "id": "checklist-inicio-semana",
     "title": "Checklist de inicio de semana",
     "slug": "checklist-inicio-semana",
