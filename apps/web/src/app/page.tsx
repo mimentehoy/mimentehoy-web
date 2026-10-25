@@ -1,9 +1,12 @@
 import Link from "next/link";
+import { getNews } from "@/lib/noticias";
+import { NewsCard } from "@/components/news-card";
 import { NewsletterBox } from "@/components/newsletter-box";
 import { ProductCard } from "@/components/product-card";
 import { productCards } from "@/data/site";
 
 export default function Home() {
+  const latestNews = getNews().slice(0, 3);
   return (
     <main className="pb-20">
       <section className="container-shell pt-8 sm:pt-10">
@@ -52,6 +55,14 @@ export default function Home() {
           </Link>
         </div>
       </section>
+
+      {latestNews.length > 0 && <section className="container-shell mt-14" aria-labelledby="latest-news-title">
+        <div className="news-home px-5 sm:px-8">
+          <div className="news-section-heading"><span className="news-eyebrow">Para leer con calma</span><h2 id="latest-news-title">Últimas noticias</h2></div>
+          <div className="news-grid">{latestNews.map((article) => <NewsCard key={article.slug} article={article} />)}</div>
+          <Link href="/noticias" className="news-rss">Ver todas las noticias →</Link>
+        </div>
+      </section>}
 
       <section id="newsletter" className="container-shell mt-14 scroll-mt-32">
         <div className="mx-auto max-w-2xl text-center">
