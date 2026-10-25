@@ -31,7 +31,5 @@ Dejar la ropa elegida o la mochila cerca de la puerta reduce una decisión por l
 
 Al final de la semana, dedica unos minutos a observar qué ha funcionado. Quizá la secuencia necesita menos pasos o hace falta más tiempo para desayunar. Ajustar el entorno también es una forma de acompañar.
 
-Puedes explorar más herramientas en nuestros [recursos para familias](/recursos).
-
 CONTROL DE CALIDAD
 NOTA_EDITORIAL_PRIVADA_RUTINAS: comprobar enlaces antes de publicar. Esta sección no debe aparecer en la web.

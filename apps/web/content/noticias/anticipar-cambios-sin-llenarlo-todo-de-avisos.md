@@ -26,5 +26,3 @@ No es necesario usar todos los apoyos a la vez. Una señal comprensible puede se
 ## Deja espacio para la respuesta
 
 Anticipar no garantiza que el cambio sea fácil. Puede seguir habiendo malestar, dudas o necesidad de una pausa. Escuchar esa respuesta ayuda a ajustar el plan y a valorar qué apoyo se necesita.
-
-Para seguir explorando ideas, visita nuestros [recursos](/recursos).
