@@ -28,11 +28,29 @@ export function SiteHeader() {
         </Link>
 
         <nav className="hidden items-center gap-6 md:flex">
-          {secondaryItems.map((item) => (
-            <Link key={item.href} href={item.href} className="text-sm font-medium text-[#334155] transition hover:text-[#001733]">
-              {item.label}
-            </Link>
-          ))}
+          {secondaryItems.map((item) =>
+            item.children ? (
+              <div key={item.href} className="group relative">
+                <Link href={item.href} className="inline-flex items-center gap-1 text-sm font-medium text-[#334155] transition hover:text-[#001733]" aria-haspopup="true">
+                  {item.label}
+                  <svg viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 opacity-60" aria-hidden="true"><path d="M5.2 7.5a.75.75 0 0 1 1.06 0L10 11.2l3.74-3.7a.75.75 0 1 1 1.06 1.06l-4.27 4.24a.75.75 0 0 1-1.06 0L5.2 8.56a.75.75 0 0 1 0-1.06Z" /></svg>
+                </Link>
+                <div className="invisible absolute left-1/2 top-full z-50 -translate-x-1/2 pt-3 opacity-0 transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                  <div className="min-w-44 rounded-2xl border border-[#e6ece9] bg-white p-2 shadow-lg">
+                    {item.children.map((child) => (
+                      <Link key={child.href} href={child.href} className="block rounded-xl px-3 py-2 text-sm font-medium text-[#334155] hover:bg-[#f3f6f4] hover:text-[#001733]">
+                        {child.label}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <Link key={item.href} href={item.href} className="text-sm font-medium text-[#334155] transition hover:text-[#001733]">
+                {item.label}
+              </Link>
+            ),
+          )}
         </nav>
 
         {/* Tienda: always visible, on mobile and desktop */}
