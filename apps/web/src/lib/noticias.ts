@@ -19,7 +19,7 @@ export function categoryTheme(category: string) {
 export function formatNewsDate(date: string) {
   return new Intl.DateTimeFormat("es-ES", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(`${date}T00:00:00Z`));
 }
-export const getNews = cache((): NewsArticle[] => {
+export function readMarkdownEntries(directory: string): (NewsArticle & { data: Record<string, unknown> })[] {
   if (!fs.existsSync(directory)) return [];
   return fs.readdirSync(directory).filter((file) => file.endsWith(".md")).map((file) => {
     const source = fs.readFileSync(path.join(directory, file), "utf8");
@@ -44,9 +44,10 @@ export const getNews = cache((): NewsArticle[] => {
     }
     const reading = String(data.tiempo_lectura);
     return { titulo: data.titulo, slug: data.slug, fecha, descripcion: data.descripcion, categoria: data.categoria,
-      etiquetas: data.etiquetas, tiempo_lectura: /^\d+$/.test(reading) ? `${reading} min` : reading, imagen, contenido: content.trim().replace(/^#\s+.+\n+/, "") };
+      etiquetas: data.etiquetas, tiempo_lectura: /^\d+$/.test(reading) ? `${reading} min` : reading, imagen, contenido: content.trim().replace(/^#\s+.+\n+/, ""), data };
   }).sort((a, b) => b.fecha.localeCompare(a.fecha) || a.slug.localeCompare(b.slug));
-});
+}
+export const getNews = cache((): NewsArticle[] => readMarkdownEntries(directory).map(({ data: _data, ...article }) => { void _data; return article; }));
 export function getRelatedNews(article: NewsArticle) {
   const score = (other: NewsArticle) => Number(other.categoria === article.categoria) * 3 + other.etiquetas.filter((tag) => article.etiquetas.includes(tag)).length;
   return getNews().filter((other) => other.slug !== article.slug).sort((a, b) => score(b) - score(a) || b.fecha.localeCompare(a.fecha)).slice(0, 3);

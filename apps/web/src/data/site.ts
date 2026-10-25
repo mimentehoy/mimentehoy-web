@@ -1,7 +1,15 @@
 export const navItems = [
   { label: "Inicio", href: "/" },
   { label: "Noticias", href: "/noticias" },
-  { label: "Herramientas", href: "/herramientas" },
+  {
+    label: "Herramientas",
+    href: "/herramientas",
+    children: [
+      { label: "Autismo", href: "/herramientas/autismo" },
+      { label: "TDAH", href: "/herramientas/tdah" },
+      { label: "Alzhéimer", href: "/herramientas/alzheimer" },
+    ],
+  },
   { label: "Newsletter", href: "/newsletter" },
   { label: "Tienda", href: "/tienda" },
 ];
@@ -73,18 +81,6 @@ export const resources = [
   },
 ];
 
-export const toolHighlights = [
-  {
-    title: "Generador de rutinas visuales",
-    description: "Crea una rutina clara con tareas, iconos y pasos adaptados a la mañana.",
-    cta: "Probar herramienta",
-  },
-  {
-    title: "Planificador semanal familiar",
-    description: "Pega una visión del hogar para equilibrar tareas, sueño y tiempos de calma.",
-    cta: "Próximamente",
-  },
-];
 
 export type ProductCard = {
   title: string;
