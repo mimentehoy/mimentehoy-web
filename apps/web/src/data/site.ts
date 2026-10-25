@@ -58,13 +58,6 @@ export const featuredArticles = [
 
 export const resources = [
   {
-    title: "Guía gratuita para empezar con calma",
-    category: "Crianza",
-    type: "PDF",
-    label: "Gratis",
-    description: "Una guía práctica para entender señales, poner límites y crear ritmos más suaves en casa.",
-  },
-  {
     title: "Checklist de inicio de semana",
     category: "Rutinas",
     type: "PDF",
