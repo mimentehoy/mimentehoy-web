@@ -110,10 +110,25 @@ async function seedResources() {
   return created;
 }
 
+// Resources removed from the site on purpose. Deleted from the database on
+// every build so the one-time seed above can never bring them back.
+const RETIRED_RESOURCE_SLUGS = ["guia-gratuita-para-empezar-con-calma"];
+
+async function removeRetiredResources() {
+  try {
+    const { count } = await prisma.resource.deleteMany({ where: { slug: { in: RETIRED_RESOURCE_SLUGS } } });
+    return count;
+  } catch (error) {
+    console.warn("[db-seed] Could not remove retired resources:", error);
+    return 0;
+  }
+}
+
 (async () => {
   try {
     const [articlesCreated, resourcesCreated] = [await seedArticles(), await seedResources()];
-    console.log(`[db-seed] Done. Articles created: ${articlesCreated}. Resources created: ${resourcesCreated}.`);
+    const resourcesRemoved = await removeRetiredResources();
+    console.log(`[db-seed] Done. Articles created: ${articlesCreated}. Resources created: ${resourcesCreated}. Resources removed: ${resourcesRemoved}.`);
     process.exit(0);
   } catch (error) {
     console.error("[db-seed] Failed:", error);
