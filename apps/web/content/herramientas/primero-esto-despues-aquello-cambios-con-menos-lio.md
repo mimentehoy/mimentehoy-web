@@ -7,6 +7,7 @@ descripcion: "Una tarjeta sencilla de «primero / después» para que tu hijo o 
 categoria: "Autismo"
 etiquetas: ["autismo", "familias", "transiciones", "apoyos visuales", "rutinas"]
 tiempo_lectura: "3 min"
+imagen: "/noticias/primero-esto-despues-aquello.jpg"
 prompt_imagen: "Ilustración plana y cálida en tonos crema, terracota y teal: una mesa de cocina con una tarjeta de papel dividida en dos mitades, a la izquierda un dibujo sencillo de un cepillo de dientes y a la derecha un cuento; la mano de un adulto y la de un niño señalan la tarjeta juntas. Luz suave de mañana, sin texto, estilo editorial amable."
 ---
 
