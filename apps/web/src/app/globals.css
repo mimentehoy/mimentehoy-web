@@ -159,3 +159,6 @@ p {
 .tool-tabs a { border: 1px solid #cfc9bd; padding: .65rem 1.2rem; border-radius: 999px; font-size: .85rem; transition: background .15s; }
 .tool-tabs a:hover { background: #e7e9dd; color: #244b45; }
 .tool-tabs a[aria-current="page"] { background: #24635f; color: #fff; border-color: #24635f; }
+
+/* Categoría de cada artículo (DEPRESIÓN, TDAH...) en negrita y más grande */
+.news-card .news-category { font-size: 1rem; font-weight: 800; letter-spacing: .1em; }
