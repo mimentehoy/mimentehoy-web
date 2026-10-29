@@ -30,6 +30,8 @@ export async function POST(req: NextRequest) {
       metadata: { producto: producto.slug },
       payment_intent_data: { metadata: { producto: producto.slug } },
       allow_promotion_codes: true,
+      // Pago estándar de Stripe (1,5 % + 0,25 €). Managed Payments añade un 3,5 % extra por venta.
+      managed_payments: { enabled: false },
       // Contenido digital: aviso de pérdida del derecho de desistimiento (LGDCU art. 103.m)
       custom_text: {
         submit: {
