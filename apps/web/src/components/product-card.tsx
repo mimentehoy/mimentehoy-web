@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BuyButton } from "@/components/buy-button";
 import type { ProductCard as ProductCardData } from "@/data/site";
 
 type ProductCardProps = {
@@ -48,14 +49,9 @@ export function ProductCard({ product, compact = false }: ProductCardProps) {
         )}
 
         <div className="mt-3 flex flex-wrap gap-2 sm:mt-auto sm:pt-5">
-          <a
-            href={product.shopifyUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="primary-button !px-4 !py-2"
-          >
+          <BuyButton slug={product.slug} className="primary-button !px-4 !py-2">
             Comprar
-          </a>
+          </BuyButton>
           <Link href={`/tienda/${product.slug}`} className="secondary-button !px-4 !py-2">
             Ver más
           </Link>
