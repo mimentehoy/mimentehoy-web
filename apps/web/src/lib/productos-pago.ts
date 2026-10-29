@@ -9,15 +9,15 @@ import { productCards } from "@/data/site";
 
 const ARCHIVOS: Record<string, { etiqueta: string; ruta: string }[]> = {
   "el-idioma-de-tu-hijo": [
-    { etiqueta: "Libro en PDF", ruta: "el-idioma-de-tu-hijo/el-idioma-de-tu-hijo.pdf" },
-    { etiqueta: "Libro en EPUB", ruta: "el-idioma-de-tu-hijo/el-idioma-de-tu-hijo.epub" },
+    { etiqueta: "Libro en PDF", ruta: "el-idioma-de-tu-hijo/El_idioma_de_tu_hijo_v2.pdf" },
+    { etiqueta: "Libro en EPUB", ruta: "el-idioma-de-tu-hijo/El_idioma_de_tu_hijo_v2.epub" },
   ],
   "kit-plantillas-el-idioma-de-tu-hijo": [
-    { etiqueta: "Kit de plantillas (PDF)", ruta: "kit-plantillas-el-idioma-de-tu-hijo/kit-plantillas.pdf" },
+    { etiqueta: "Kit de plantillas (PDF)", ruta: "kit-plantillas-el-idioma-de-tu-hijo/Kit_El_idioma_de_tu_hijo_A4_color.pdf" },
   ],
   "no-es-que-no-quiera": [
-    { etiqueta: "Libro en PDF", ruta: "no-es-que-no-quiera/no-es-que-no-quiera.pdf" },
-    { etiqueta: "Libro en EPUB", ruta: "no-es-que-no-quiera/no-es-que-no-quiera.epub" },
+    { etiqueta: "Libro en PDF", ruta: "no-es-que-no-quiera/NO-ES-QUE-NO-QUIERA.pdf" },
+    { etiqueta: "Libro en EPUB", ruta: "no-es-que-no-quiera/NO-ES-QUE-NO-QUIERA.epub" },
   ],
   "kit-para-padres": [
     { etiqueta: "Kit para padres (PDF)", ruta: "kit-para-padres/kit-para-padres.pdf" },
