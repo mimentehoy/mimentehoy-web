@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { BuyButton } from "@/components/buy-button";
 import { ProductCard } from "@/components/product-card";
 import { productCards } from "@/data/site";
 
@@ -80,14 +81,14 @@ export default async function ProductDetailPage({
             <p className="mt-5 text-sm font-medium text-stone-700">{product.format}</p>
 
             <div className="mt-6 flex flex-wrap gap-3">
-              <a href={product.shopifyUrl} className="primary-button" target="_blank" rel="noreferrer">
+              <BuyButton slug={product.slug} className="primary-button">
                 Comprar por {product.price}
-              </a>
+              </BuyButton>
               <Link href="/newsletter" className="secondary-button">
                 Recibir recursos gratis
               </Link>
             </div>
-            <p className="mt-3 text-xs text-stone-500">Pago seguro en Shopify. Descarga inmediata tras la compra.</p>
+            <p className="mt-3 text-xs text-stone-500">Pago seguro con tarjeta, Apple Pay o Google Pay. Descarga inmediata tras la compra.</p>
           </div>
         </div>
 
@@ -103,14 +104,9 @@ export default async function ProductDetailPage({
 
       {/* Mobile: buy button always within thumb reach */}
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[#dfeaf0] bg-white/95 p-3 backdrop-blur-md sm:hidden print:hidden">
-        <a
-          href={product.shopifyUrl}
-          target="_blank"
-          rel="noreferrer"
-          className="primary-button w-full !py-3.5"
-        >
+        <BuyButton slug={product.slug} formClassName="w-full" className="primary-button w-full !py-3.5">
           Comprar ahora · {product.price}
-        </a>
+        </BuyButton>
       </div>
     </main>
   );
