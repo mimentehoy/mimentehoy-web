@@ -11,8 +11,9 @@ export async function enlaceFirmado(ruta: string, segundos = 60): Promise<string
   const res = await fetch(`${url}/storage/v1/object/sign/${bucket}/${rutaCodificada}`, {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${key}`,
       apikey: key,
+      // Las claves nuevas (sb_secret_...) van solo en "apikey"; las antiguas (JWT eyJ...) también en Authorization.
+      ...(key.startsWith("eyJ") ? { Authorization: `Bearer ${key}` } : {}),
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ expiresIn: segundos }),
