@@ -1,6 +1,6 @@
 import { SectionHeading } from "@/components/section-heading";
 import { ProductCard } from "@/components/product-card";
-import { productCards, shopifyStoreUrl } from "@/data/site";
+import { productCards } from "@/data/site";
 
 export const metadata = {
   title: "Tienda | MIMENTEHOY",
@@ -27,7 +27,7 @@ export default function TiendaPage() {
       <SectionHeading
         eyebrow="Tienda"
         title="Libros y kits MIMENTEHOY"
-        description="Guías prácticas y plantillas imprimibles para familias. Pago seguro en Shopify y descarga inmediata tras la compra."
+        description="Guías prácticas y plantillas imprimibles para familias. Pago seguro con tarjeta, Apple Pay o Google Pay y descarga inmediata tras la compra."
       />
 
       <nav className="mb-8 flex flex-wrap gap-2" aria-label="Categorías de la tienda">
@@ -56,16 +56,6 @@ export default function TiendaPage() {
             </section>
           );
         })}
-      </div>
-
-      <div className="mt-12 section-shell flex flex-col items-start gap-4 p-6 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h2 className="text-lg font-semibold text-stone-900">¿Prefieres ver la tienda completa?</h2>
-          <p className="mt-1 text-sm text-stone-600">Todos los productos y el carrito están en nuestra tienda de Shopify.</p>
-        </div>
-        <a href={shopifyStoreUrl} target="_blank" rel="noreferrer" className="primary-button">
-          Ir a la tienda Shopify
-        </a>
       </div>
     </main>
   );
