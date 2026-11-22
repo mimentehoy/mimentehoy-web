@@ -27,7 +27,7 @@ export default function TiendaPage() {
       <SectionHeading
         eyebrow="Tienda"
         title="Libros y kits MIMENTEHOY"
-        description="Guías prácticas y plantillas imprimibles para familias. Pago seguro con tarjeta, Apple Pay o Google Pay y descarga inmediata tras la compra."
+        description="Guías prácticas y plantillas imprimibles para familias. Pago seguro con tarjeta, Apple Pay o Google Pay y descarga inmediata tras la compra. Pagas en tu moneda local (soles, pesos, reales…)."
       />
 
       <nav className="mb-8 flex flex-wrap gap-2" aria-label="Categorías de la tienda">
