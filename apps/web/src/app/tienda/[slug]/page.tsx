@@ -89,6 +89,7 @@ export default async function ProductDetailPage({
               </Link>
             </div>
             <p className="mt-3 text-xs text-stone-500">Pago seguro con tarjeta, Apple Pay o Google Pay. Descarga inmediata tras la compra.</p>
+            <p className="mt-1 text-xs text-stone-500">Pagas en tu moneda local (soles, pesos, reales…) — conversión automática y segura con Stripe.</p>
           </div>
         </div>
 
